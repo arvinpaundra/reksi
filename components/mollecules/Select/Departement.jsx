@@ -10,7 +10,6 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
   const [selectedOption, setSelectedOption] = useState();
   const [departements, setDepartements] = useState([]);
   const [searchDepartement, setSearchDepartement] = useState('');
-  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
   const departementDeb = useDebounce(searchDepartement, 500);
 
@@ -33,7 +32,6 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
 
   useEffect(() => {
     getAllDepartementsAPI(departementDeb);
-    setMenuPortalTarget(document.body);
   }, [getAllDepartementsAPI, departementDeb]);
 
   const handleSearchInputChange = (inputValue) => {

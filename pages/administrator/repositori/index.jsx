@@ -29,6 +29,8 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { BiChevronRight } from 'react-icons/bi';
 import { FormatDateIntl } from '../../../helper/format_date_intl';
+import SelectCategory from '../../../components/mollecules/Select/Category';
+import { FINAL_REPORT_ID, INTERNSHIP_REPORT_ID } from '../../../constants';
 
 const AdministratorRepositori = ({ data }) => {
   const [isFetching, setIsFetching] = useState(true);
@@ -43,12 +45,14 @@ const AdministratorRepositori = ({ data }) => {
   const [query, setQuery] = useState('');
   const [keyword, setKeyword] = useState('');
   const [collection, setCollection] = useState('');
+  const [category, setCategory] = useState('');
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
@@ -57,15 +61,28 @@ const AdministratorRepositori = ({ data }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isOpenRepositoryMenu, setIsOpenRepositoryMenu] = useState(false);
-  const [selectedRepository, setSelectedRepository] = useState('');
+  const [selectedRepository, setSelectedRepository] = useState({
+    repository_id: '',
+    collection_id: '',
+  });
 
   const getAllRepositoriesAPI = useCallback(
-    async (keyword, collection_id, departement_id, improvement, sort, status, currPage) => {
+    async (
+      keyword,
+      collection_id,
+      category_id,
+      departement_id,
+      improvement,
+      sort,
+      status,
+      currPage,
+    ) => {
       try {
         setLoading(true);
         const response = await getAllRepositories(
           keyword,
           collection_id,
+          category_id,
           departement_id,
           improvement,
           sort,
@@ -87,13 +104,23 @@ const AdministratorRepositori = ({ data }) => {
 
   useEffect(() => {
     if (isFetching) {
-      getAllRepositoriesAPI(keyword, collection, departement, improvement, sort, status, currPage);
+      getAllRepositoriesAPI(
+        keyword,
+        collection,
+        category,
+        departement,
+        improvement,
+        sort,
+        status,
+        currPage,
+      );
     }
 
     setIsFetching(false);
   }, [
     getAllRepositoriesAPI,
     keyword,
+    category,
     collection,
     departement,
     improvement,
@@ -135,6 +162,7 @@ const AdministratorRepositori = ({ data }) => {
     setCurrPage(0);
     setKeyword(query);
     setCollection(collectionFilter || '');
+    setCategory(categoryFilter || '');
     setDepartement(departementFilter || '');
     setImprovement(
       improvementFilter === 'Semua' ? '' : improvementFilter === 'Hasil pengembangan' ? '1' : '0',
@@ -156,6 +184,7 @@ const AdministratorRepositori = ({ data }) => {
   const handlerClearFilter = () => {
     setIsFetching(true);
     setCollectionFilter('');
+    setCategoryFilter('');
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
@@ -164,6 +193,7 @@ const AdministratorRepositori = ({ data }) => {
     setQuery('');
     setKeyword('');
     setCollection('');
+    setCategory('');
     setDepartement('');
     setImprovement('');
     setStatus('');
@@ -178,11 +208,15 @@ const AdministratorRepositori = ({ data }) => {
     setDepartementFilter(value);
   };
 
+  const handleCategoryChange = ({ value }) => {
+    setCategoryFilter(value);
+  };
+
   const handleDeleteRepository = async () => {
     try {
       setLoading(true);
       setIsOpenRepositoryMenu(false);
-      const response = await deleteRepository(selectedRepository);
+      const response = await deleteRepository(selectedRepository?.repository_id);
 
       if (response?.code >= 300) {
         toast.error(response?.message, { toastId: 'error' });
@@ -292,7 +326,7 @@ const AdministratorRepositori = ({ data }) => {
                                       {item.collection}
                                     </Badge>
                                     <Badge borderColor="border-red" textColor="text-red">
-                                      {item.departement}
+                                      {item.category}
                                     </Badge>
                                   </div>
                                 </div>
@@ -304,7 +338,10 @@ const AdministratorRepositori = ({ data }) => {
                           <button
                             onClick={() => {
                               setIsOpenRepositoryMenu((prevState) => !prevState);
-                              setSelectedRepository(item.id);
+                              setSelectedRepository({
+                                repository_id: item.id,
+                                collection_id: item.collection_id,
+                              });
                             }}
                             className="p-3 hover:bg-black/5 rounded-full absolute top-4 right-4"
                           >
@@ -363,6 +400,7 @@ const AdministratorRepositori = ({ data }) => {
         direction="right"
         size={400}
         lockBackgroundScroll={true}
+        className="overflow-y-auto"
       >
         <div className="p-4 text-center">
           <h3 className="font-semibold text-lg md:text-xl">Filter</h3>
@@ -376,6 +414,12 @@ const AdministratorRepositori = ({ data }) => {
               Koleksi
             </label>
             <SelectCollection onCollectionChange={handleCollectionChange} visibility="" />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Kategori
+            </label>
+            <SelectCategory onCategoryChange={handleCategoryChange} />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">
@@ -574,15 +618,44 @@ const AdministratorRepositori = ({ data }) => {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-72 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all">
-                  <Link href={`/administrator/repositori/${selectedRepository}/edit`}>
-                    <a className="outline-none w-full">
-                      <div className="p-5 font-medium">
-                        <p>Edit</p>
-                      </div>
+                  {selectedRepository.collection_id === INTERNSHIP_REPORT_ID ? (
+                    <Link
+                      href={`/administrator/repositori/edit/magang-industri/${selectedRepository.repository_id}`}
+                    >
+                      <a className="outline-none w-full">
+                        <div className="p-5 font-medium">
+                          <p>Edit</p>
+                        </div>
 
-                      <Divider />
-                    </a>
-                  </Link>
+                        <Divider />
+                      </a>
+                    </Link>
+                  ) : selectedRepository.collection_id === FINAL_REPORT_ID ? (
+                    <Link
+                      href={`/administrator/repositori/edit/tugas-akhir/${selectedRepository.repository_id}`}
+                    >
+                      <a className="outline-none w-full">
+                        <div className="p-5 font-medium">
+                          <p>Edit</p>
+                        </div>
+
+                        <Divider />
+                      </a>
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/administrator/repositori/edit/penelitian/${selectedRepository.repository_id}`}
+                    >
+                      <a className="outline-none w-full">
+                        <div className="p-5 font-medium">
+                          <p>Edit</p>
+                        </div>
+
+                        <Divider />
+                      </a>
+                    </Link>
+                  )}
+
                   <button
                     className="p-5 outline-none font-medium text-red w-full text-start"
                     onClick={handleDeleteRepository}

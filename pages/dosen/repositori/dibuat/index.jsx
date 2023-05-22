@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import jwtDecode from 'jwt-decode';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { getAuthorRepositories } from '../../../../services/repository';
+import { deleteRepository, getAuthorRepositories } from '../../../../services/repository';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Navbar from '../../../../components/organisms/Navbar';
@@ -23,6 +23,9 @@ import { FaBook } from 'react-icons/fa';
 import SelectDepartement from '../../../../components/mollecules/Select/Departement';
 import SelectCollection from '../../../../components/mollecules/Select/Collection';
 import { FormatDateIntl } from '../../../../helper/format_date_intl';
+import SelectCategory from '../../../../components/mollecules/Select/Category';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { toast } from 'react-toastify';
 
 const RepositoriDosen = (props) => {
   const { data } = props;
@@ -36,6 +39,7 @@ const RepositoriDosen = (props) => {
   const [query, setQuery] = useState('');
   const [keyword, setKeyword] = useState('');
   const [collection, setCollection] = useState('');
+  const [category, setCategory] = useState('');
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
@@ -43,18 +47,26 @@ const RepositoriDosen = (props) => {
 
   const [collectionFilter, setCollectionFilter] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
   const [sortFilter, setSortFilter] = useState('Terbaru');
+  const [isFetching, setIsFetching] = useState(true);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isOpenRepositoryMenu, setIsOpenRepositoryMenu] = useState(false);
+  const [selectedRepository, setSelectedRepository] = useState({
+    repository_id: '',
+    collection_id: '',
+  });
 
   const getAuthorRepositoriesAPI = useCallback(
     async (
       pemustaka_id,
       keyword,
       collection_id,
+      category_id,
       departement_id,
       improvement,
       status,
@@ -69,6 +81,7 @@ const RepositoriDosen = (props) => {
           pemustaka_id,
           keyword,
           collection_id,
+          category_id,
           departement_id,
           improvement,
           status,
@@ -97,27 +110,32 @@ const RepositoriDosen = (props) => {
       payloads = jwtDecode(token);
     }
 
-    getAuthorRepositoriesAPI(
-      payloads.id,
-      keyword,
-      collection,
-      departement,
-      improvement,
-      status,
-      sort,
-      limit,
-      currPage,
-    );
+    if (isFetching) {
+      getAuthorRepositoriesAPI(
+        payloads.id,
+        keyword,
+        collection,
+        category,
+        departement,
+        improvement,
+        status,
+        sort,
+        limit,
+        currPage,
+      );
+    }
   }, [
     getAuthorRepositoriesAPI,
     keyword,
     collection,
+    category,
     departement,
     improvement,
     status,
     sort,
     limit,
     currPage,
+    isFetching,
   ]);
 
   const pageChange = ({ selected }) => {
@@ -134,6 +152,7 @@ const RepositoriDosen = (props) => {
     setCurrPage(0);
     setKeyword(query);
     setCollection(collectionFilter || '');
+    setCategory(categoryFilter || '');
     setDepartement(departementFilter || '');
     setImprovement(
       improvementFilter === 'Semua' ? '' : improvementFilter === 'Hasil pengembangan' ? '1' : '0',
@@ -154,6 +173,7 @@ const RepositoriDosen = (props) => {
 
   const handlerClearFilter = () => {
     setCollectionFilter('');
+    setCategoryFilter('');
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
@@ -162,6 +182,7 @@ const RepositoriDosen = (props) => {
     setQuery('');
     setKeyword('');
     setCollection('');
+    setCategory('');
     setDepartement('');
     setImprovement('');
     setStatus('');
@@ -174,6 +195,29 @@ const RepositoriDosen = (props) => {
 
   const handleDepartementChange = ({ value }) => {
     setDepartementFilter(value);
+  };
+
+  const handleCategoryChange = ({ value }) => {
+    setCategoryFilter(value);
+  };
+
+  const handleDeleteRepository = async () => {
+    try {
+      setLoading(true);
+      setIsOpenRepositoryMenu(false);
+      const response = await deleteRepository(selectedRepository?.repository_id);
+
+      if (response?.code >= 300) {
+        toast.error(response?.message, { toastId: 'error' });
+        return;
+      }
+
+      toast.success('Yeay! Karya tulis ilmiah berhasil dihapus.');
+    } catch (error) {
+    } finally {
+      setLoading(false);
+      setIsFetching(true);
+    }
   };
 
   return (
@@ -231,39 +275,54 @@ const RepositoriDosen = (props) => {
                   <CardBody>
                     {repositories?.length > 0 ? (
                       repositories?.map((item) => (
-                        <Link href={`/dosen/repositori/dibuat/${item.id}`} key={item.id}>
-                          <a>
-                            <div className="p-4 md:px-6 lg:px-10 md:flex md:gap-4">
-                              <img
-                                src="/images/Rectangle.png"
-                                alt=""
-                                className="hidden md:block w-24 h-32"
-                              />
-                              <div>
-                                <h3 className="text-base font-medium text-justify mb-1">
-                                  {item.title}
-                                </h3>
-                                {item.authors?.map((author) => (
-                                  <p className="text-sm text-secondary" key={author.author_id}>
-                                    {author.fullname}
+                        <div className="relative" key={item.id}>
+                          <Link href={`/dosen/repositori/dibuat/${item.id}`} key={item.id}>
+                            <a>
+                              <div className="p-4 md:px-6 lg:px-10 md:flex md:gap-4">
+                                <img
+                                  src="/images/Rectangle.png"
+                                  alt=""
+                                  className="hidden md:block w-24 h-32"
+                                />
+                                <div>
+                                  <h3 className="text-base font-medium text-justify mb-1">
+                                    {item.title}
+                                  </h3>
+                                  {item.authors?.map((author) => (
+                                    <p className="text-sm text-secondary" key={author.author_id}>
+                                      {author.fullname}
+                                    </p>
+                                  ))}
+                                  <p className="text-sm text-secondary mb-2">
+                                    {FormatDateIntl(item.date_validated)}
                                   </p>
-                                ))}
-                                <p className="text-sm text-secondary mb-2">
-                                  {FormatDateIntl(item.date_validated)}
-                                </p>
-                                <div className="flex items-center flex-wrap justify-start gap-2">
-                                  <Badge borderColor="border-green" textColor="text-green">
-                                    {item.collection}
-                                  </Badge>
-                                  <Badge borderColor="border-red" textColor="text-red">
-                                    {item.departement}
-                                  </Badge>
+                                  <div className="flex items-center flex-wrap justify-start gap-2">
+                                    <Badge borderColor="border-green" textColor="text-green">
+                                      {item.collection}
+                                    </Badge>
+                                    <Badge borderColor="border-red" textColor="text-red">
+                                      {item.category}
+                                    </Badge>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <Divider />
-                          </a>
-                        </Link>
+                              <Divider />
+                            </a>
+                          </Link>
+
+                          <button
+                            onClick={() => {
+                              setIsOpenRepositoryMenu((prevState) => !prevState);
+                              setSelectedRepository({
+                                repository_id: item.id,
+                                collection_id: item.collection_id,
+                              });
+                            }}
+                            className="p-3 hover:bg-black/5 rounded-full absolute top-4 right-4"
+                          >
+                            <BsThreeDotsVertical />
+                          </button>
+                        </div>
                       ))
                     ) : (
                       <>
@@ -315,6 +374,7 @@ const RepositoriDosen = (props) => {
         direction="right"
         size={400}
         lockBackgroundScroll={true}
+        className="overflow-y-auto"
       >
         <div className="p-4 text-center">
           <h3 className="font-semibold text-lg md:text-xl">Filter</h3>
@@ -328,6 +388,12 @@ const RepositoriDosen = (props) => {
               Koleksi
             </label>
             <SelectCollection onCollectionChange={handleCollectionChange} visibility="" />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Kategori
+            </label>
+            <SelectCategory onCategoryChange={handleCategoryChange} />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">
@@ -494,6 +560,61 @@ const RepositoriDosen = (props) => {
           </button>
         </div>
       </Drawer>
+
+      {/* Repopsitory Menu */}
+      <Transition show={isOpenRepositoryMenu} as={Fragment}>
+        <Dialog
+          className="relative z-10"
+          open={isOpenRepositoryMenu}
+          onClose={() => setIsOpenRepositoryMenu(false)}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0">
+            <div className="flex items-center justify-center min-h-screen p-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-72 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all">
+                  <Link
+                    href={`/dosen/repositori/edit/penelitian/${selectedRepository?.repository_id}`}
+                  >
+                    <a className="outline-none w-full">
+                      <div className="p-5 font-medium">
+                        <p>Edit</p>
+                      </div>
+
+                      <Divider />
+                    </a>
+                  </Link>
+                  <button
+                    className="p-5 outline-none font-medium text-red w-full text-start"
+                    onClick={handleDeleteRepository}
+                  >
+                    Hapus
+                  </button>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </>
   );
 };

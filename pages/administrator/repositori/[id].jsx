@@ -63,18 +63,6 @@ const AdministratorDetailRepository = ({ data }) => {
 
   const title = repository?.title;
 
-  const formatDateValidated = new Date(repository?.date_validated).toLocaleDateString('in-IN', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-
-  const formatUploadedAt = new Date(repository?.created_at).toLocaleDateString('in-IN', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-
   return (
     <div>
       <Head>
@@ -125,7 +113,7 @@ const AdministratorDetailRepository = ({ data }) => {
                             {repository?.collection}
                           </Badge>
                           <Badge borderColor="border-red" textColor="text-red">
-                            {repository?.departement}
+                            {repository?.category}
                           </Badge>
                         </div>
                       </div>
@@ -158,6 +146,7 @@ const AdministratorDetailRepository = ({ data }) => {
                             ))}
                           </div>
                           <TextInfo label="Koleksi" value={repository?.collection} />
+                          <TextInfo label="Kategori" value={repository?.category} />
                           <TextInfo label="Jurusan" value={repository?.departement} />
                           <TextInfo
                             label="Tanggal Disahkan"

@@ -85,7 +85,7 @@ const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
             Authorization: `Bearer ${token}`,
           },
           responseType: 'blob',
-          timeout: 30000,
+          timeout: 60000,
         },
       );
 

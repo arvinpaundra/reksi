@@ -29,6 +29,8 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { BiChevronRight } from 'react-icons/bi';
 import { FormatDateIntl } from '../../../helper/format_date_intl';
+import SelectCategory from '../../../components/mollecules/Select/Category';
+import { FINAL_REPORT_ID, INTERNSHIP_REPORT_ID } from '../../../constants';
 
 const PustakawanRepositori = ({ data }) => {
   const [isFetching, setIsFetching] = useState(true);
@@ -43,12 +45,14 @@ const PustakawanRepositori = ({ data }) => {
   const [query, setQuery] = useState('');
   const [keyword, setKeyword] = useState('');
   const [collection, setCollection] = useState('');
+  const [category, setCategory] = useState('');
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
@@ -57,15 +61,29 @@ const PustakawanRepositori = ({ data }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isOpenRepositoryMenu, setIsOpenRepositoryMenu] = useState(false);
-  const [selectedRepository, setSelectedRepository] = useState('');
+  const [selectedRepository, setSelectedRepository] = useState({
+    repository_id: '',
+    collection_id: '',
+  });
 
   const getAllRepositoriesAPI = useCallback(
-    async (keyword, collection_id, departement_id, improvement, sort, status, limit, currPage) => {
+    async (
+      keyword,
+      collection_id,
+      category_id,
+      departement_id,
+      improvement,
+      sort,
+      status,
+      limit,
+      currPage,
+    ) => {
       try {
         setLoading(true);
         const response = await getAllRepositories(
           keyword,
           collection_id,
+          category_id,
           departement_id,
           improvement,
           sort,
@@ -90,6 +108,7 @@ const PustakawanRepositori = ({ data }) => {
       getAllRepositoriesAPI(
         keyword,
         collection,
+        category,
         departement,
         improvement,
         sort,
@@ -104,6 +123,7 @@ const PustakawanRepositori = ({ data }) => {
     getAllRepositoriesAPI,
     keyword,
     collection,
+    category,
     departement,
     improvement,
     sort,
@@ -145,6 +165,7 @@ const PustakawanRepositori = ({ data }) => {
     setCurrPage(0);
     setKeyword(query);
     setCollection(collectionFilter || '');
+    setCategory(categoryFilter || '');
     setDepartement(departementFilter || '');
     setImprovement(
       improvementFilter === 'Semua' ? '' : improvementFilter === 'Hasil pengembangan' ? '1' : '0',
@@ -166,6 +187,7 @@ const PustakawanRepositori = ({ data }) => {
   const handlerClearFilter = () => {
     setIsFetching(true);
     setCollectionFilter('');
+    setCategoryFilter('');
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
@@ -174,6 +196,7 @@ const PustakawanRepositori = ({ data }) => {
     setQuery('');
     setKeyword('');
     setCollection('');
+    setCategory('');
     setDepartement('');
     setImprovement('');
     setStatus('');
@@ -186,6 +209,10 @@ const PustakawanRepositori = ({ data }) => {
 
   const handleDepartementChange = ({ value }) => {
     setDepartementFilter(value);
+  };
+
+  const handleCategoryChange = ({ value }) => {
+    setCategoryFilter(value);
   };
 
   const handleDeleteRepository = async () => {
@@ -302,7 +329,7 @@ const PustakawanRepositori = ({ data }) => {
                                       {item.collection}
                                     </Badge>
                                     <Badge borderColor="border-red" textColor="text-red">
-                                      {item.departement}
+                                      {item.category}
                                     </Badge>
                                   </div>
                                 </div>
@@ -314,7 +341,10 @@ const PustakawanRepositori = ({ data }) => {
                           <button
                             onClick={() => {
                               setIsOpenRepositoryMenu((prevState) => !prevState);
-                              setSelectedRepository(item.id);
+                              setSelectedRepository({
+                                repository_id: item.id,
+                                collection_id: item.collection_id,
+                              });
                             }}
                             className="p-3 hover:bg-black/5 rounded-full absolute top-4 right-4"
                           >
@@ -373,6 +403,7 @@ const PustakawanRepositori = ({ data }) => {
         direction="right"
         size={400}
         lockBackgroundScroll={true}
+        className="overflow-y-auto"
       >
         <div className="p-4 text-center">
           <h3 className="font-semibold text-lg md:text-xl">Filter</h3>
@@ -386,6 +417,12 @@ const PustakawanRepositori = ({ data }) => {
               Koleksi
             </label>
             <SelectCollection onCollectionChange={handleCollectionChange} visibility="" />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Kategori
+            </label>
+            <SelectCategory onCategoryChange={handleCategoryChange} />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">
@@ -584,15 +621,43 @@ const PustakawanRepositori = ({ data }) => {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-72 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all">
-                  <Link href={`/pustakawan/repositori/${selectedRepository}/edit`}>
-                    <a className="outline-none w-full">
-                      <div className="p-5 font-medium">
-                        <p>Edit</p>
-                      </div>
+                  {selectedRepository.collection_id === INTERNSHIP_REPORT_ID ? (
+                    <Link
+                      href={`/pustakawan/repositori/edit/magang-industri/${selectedRepository.repository_id}`}
+                    >
+                      <a className="outline-none w-full">
+                        <div className="p-5 font-medium">
+                          <p>Edit</p>
+                        </div>
 
-                      <Divider />
-                    </a>
-                  </Link>
+                        <Divider />
+                      </a>
+                    </Link>
+                  ) : selectedRepository.collection_id === FINAL_REPORT_ID ? (
+                    <Link
+                      href={`/pustakawan/repositori/edit/tugas-akhir/${selectedRepository.repository_id}`}
+                    >
+                      <a className="outline-none w-full">
+                        <div className="p-5 font-medium">
+                          <p>Edit</p>
+                        </div>
+
+                        <Divider />
+                      </a>
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/pustakawan/repositori/edit/penelitian/${selectedRepository.repository_id}`}
+                    >
+                      <a className="outline-none w-full">
+                        <div className="p-5 font-medium">
+                          <p>Edit</p>
+                        </div>
+
+                        <Divider />
+                      </a>
+                    </Link>
+                  )}
                   <button
                     className="p-5 outline-none font-medium text-red w-full text-start"
                     onClick={handleDeleteRepository}

@@ -160,9 +160,9 @@ const PustakawanEditKoleksi = ({ data }) => {
                             active ? 'bg-green/10 text-black' : 'text-secondary'
                           }`
                         }
-                        value="Mahasiswa"
+                        value="Dosen"
                       >
-                        Mahasiswa
+                        Dosen
                       </Listbox.Option>
                     </Listbox.Options>
                   </div>

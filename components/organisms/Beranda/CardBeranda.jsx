@@ -25,6 +25,7 @@ const CardBeranda = (props) => {
         '',
         '',
         '',
+        '',
         'created_at DESC',
         'approved',
         10,
@@ -55,40 +56,55 @@ const CardBeranda = (props) => {
       </CardHeader>
 
       <CardBody className="w-full bg-white">
-        {repositories?.map((item) => (
-          <Link href={`/repositori/${item.id}`} key={item.id}>
-            <a>
-              <div className="p-4 md:p-6 md:flex md:gap-4">
-                <img src="/images/Rectangle.png" alt="" className="hidden md:block w-24 h-32" />
-                <div>
-                  <h3 className="text-base font-medium text-justify mb-1">{item.title}</h3>
-                  {item.authors.map((author) => (
-                    <p className="text-sm text-secondary" key={author.author_id}>
-                      {author.fullname}
+        {repositories?.length > 0 ? (
+          repositories?.map((item) => (
+            <Link href={`/repositori/${item.id}`} key={item.id}>
+              <a>
+                <div className="p-4 md:p-6 md:flex md:gap-4">
+                  <img src="/images/Rectangle.png" alt="" className="hidden md:block w-24 h-32" />
+                  <div>
+                    <h3 className="text-base font-medium text-justify mb-1">{item.title}</h3>
+                    {item.authors.map((author) => (
+                      <p className="text-sm text-secondary" key={author.author_id}>
+                        {author.fullname}
+                      </p>
+                    ))}
+                    <p className="text-sm text-secondary my-2">
+                      {FormatDateIntl(item.date_validated)}
                     </p>
-                  ))}
-                  <p className="text-sm text-secondary my-2">
-                    {FormatDateIntl(item.date_validated)}
-                  </p>
-                  <div className="flex items-center flex-wrap justify-start gap-2">
-                    <Badge borderColor="border-green" textColor="text-green">
-                      {item.collection}
-                    </Badge>
-                    <Badge borderColor="border-red" textColor="text-red">
-                      {item.departement}
-                    </Badge>
+                    <div className="flex items-center flex-wrap justify-start gap-2">
+                      <Badge borderColor="border-green" textColor="text-green">
+                        {item.collection}
+                      </Badge>
+                      <Badge borderColor="border-red" textColor="text-red">
+                        {item.departement}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <Divider />
-            </a>
-          </Link>
-        ))}
+                <Divider />
+              </a>
+            </Link>
+          ))
+        ) : (
+          <>
+            <div className="p-4 md:px-6 lg:px-10 flex flex-col justify-center items-center gap-4">
+              <img src="/images/empty-repository.png" alt="empty-repository" className="w-48" />
+              <p className="p-4 md:px-6 lg:px-10 text-center">
+                Karya tulis ilmiah tidak ditemukan.
+              </p>
+            </div>
+          </>
+        )}
       </CardBody>
 
-      <CardFooter className="p-6 md:p-8 flex flex-col items-center justify-center">
-        <Paginate pageChange={pageChange} pages={pages} />
-      </CardFooter>
+      {repositories?.length > 0 && (
+        <CardFooter className="p-4 flex flex-col items-center justify-center">
+          <div className="pt-6 md:pt-6 pb-4 flex flex-col items-center justify-center">
+            <Paginate pageChange={pageChange} pages={pages} />
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 };

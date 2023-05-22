@@ -17,6 +17,7 @@ import Drawer from 'react-modern-drawer';
 import Paginate from '../../components/mollecules/Pagination';
 import Badge from '../../components/atoms/Badge';
 import { FormatDateIntl } from '../../helper/format_date_intl';
+import SelectCategory from '../../components/mollecules/Select/Category';
 
 const Repositori = () => {
   const [repositories, setRepositories] = useState([]);
@@ -28,11 +29,13 @@ const Repositori = () => {
   const [query, setQuery] = useState('');
   const [keyword, setKeyword] = useState('');
   const [collection, setCollection] = useState('');
+  const [category, setCategory] = useState('');
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [sortFilter, setSortFilter] = useState('Terbaru');
@@ -40,12 +43,13 @@ const Repositori = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
   const getAllRepositoriesAPI = useCallback(
-    async (keyword, collection_id, departement_id, improvement, sort, currPage) => {
+    async (keyword, collection_id, category_id, departement_id, improvement, sort, currPage) => {
       try {
         setLoading(true);
         const response = await getAllRepositories(
           keyword,
           collection_id,
+          category_id,
           departement_id,
           improvement,
           sort,
@@ -66,8 +70,17 @@ const Repositori = () => {
   );
 
   useEffect(() => {
-    getAllRepositoriesAPI(keyword, collection, departement, improvement, sort, currPage);
-  }, [getAllRepositoriesAPI, keyword, collection, departement, improvement, sort, currPage]);
+    getAllRepositoriesAPI(keyword, collection, category, departement, improvement, sort, currPage);
+  }, [
+    getAllRepositoriesAPI,
+    keyword,
+    collection,
+    category,
+    departement,
+    improvement,
+    sort,
+    currPage,
+  ]);
 
   const pageChange = ({ selected }) => {
     setCurrPage(selected + 1);
@@ -83,6 +96,7 @@ const Repositori = () => {
     setCurrPage(0);
     setKeyword(query);
     setCollection(collectionFilter || '');
+    setCategory(categoryFilter || '');
     setDepartement(departementFilter || '');
     setImprovement(
       improvementFilter === 'Semua' ? '' : improvementFilter === 'Hasil pengembangan' ? '1' : '0',
@@ -94,6 +108,7 @@ const Repositori = () => {
 
   const handlerClearFilter = () => {
     setCollectionFilter('');
+    setCategoryFilter('');
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setSortFilter('Terbaru');
@@ -101,6 +116,7 @@ const Repositori = () => {
     setQuery('');
     setKeyword('');
     setCollection('');
+    setCategory('');
     setDepartement('');
     setImprovement('');
     setSort('created_at DESC');
@@ -112,6 +128,10 @@ const Repositori = () => {
 
   const handleDepartementChange = ({ value }) => {
     setDepartementFilter(value);
+  };
+
+  const handleCategoryChange = ({ value }) => {
+    setCategoryFilter(value);
   };
 
   return (
@@ -191,7 +211,7 @@ const Repositori = () => {
                                   {item.collection}
                                 </Badge>
                                 <Badge borderColor="border-red" textColor="text-red">
-                                  {item.departement}
+                                  {item.category}
                                 </Badge>
                               </div>
                             </div>
@@ -242,6 +262,7 @@ const Repositori = () => {
         direction="right"
         size={400}
         lockBackgroundScroll={true}
+        className="overflow-y-auto"
       >
         <div className="p-4 text-center">
           <h3 className="font-semibold text-lg md:text-xl">Filter</h3>
@@ -255,6 +276,12 @@ const Repositori = () => {
               Koleksi
             </label>
             <SelectCollection onCollectionChange={handleCollectionChange} visibility="" />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Kategori
+            </label>
+            <SelectCategory onCategoryChange={handleCategoryChange} />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">

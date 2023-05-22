@@ -61,18 +61,6 @@ const DetailExaminedRepository = (props) => {
 
   const title = repository?.title;
 
-  const formatDateValidated = new Date(repository?.date_validated).toLocaleDateString('in-IN', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-
-  const formatUploadedAt = new Date(repository?.created_at).toLocaleDateString('in-IN', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-
   return (
     <div>
       <Head>
@@ -118,7 +106,7 @@ const DetailExaminedRepository = (props) => {
                           {repository?.collection}
                         </Badge>
                         <Badge borderColor="border-red" textColor="text-red">
-                          {repository?.departement}
+                          {repository?.category}
                         </Badge>
                       </div>
                     </div>
@@ -151,6 +139,7 @@ const DetailExaminedRepository = (props) => {
                           ))}
                         </div>
                         <TextInfo label="Koleksi" value={repository?.collection} />
+                        <TextInfo label="Kategori" value={repository?.category} />
                         <TextInfo label="Jurusan" value={repository?.departement} />
                         <TextInfo
                           label="Tanggal Disahkan"

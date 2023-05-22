@@ -111,7 +111,7 @@ const DetailRepository = (props) => {
                         {repository?.collection}
                       </Badge>
                       <Badge borderColor="border-red" textColor="text-red">
-                        {repository?.departement}
+                        {repository?.category}
                       </Badge>
                     </div>
                   </div>
@@ -142,6 +142,7 @@ const DetailRepository = (props) => {
                         ))}
                       </div>
                       <TextInfo label="Koleksi" value={repository?.collection} />
+                      <TextInfo label="Kategori" value={repository?.category} />
                       <TextInfo label="Jurusan" value={repository?.departement} />
                       <TextInfo
                         label="Tanggal Disahkan"

@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import SelectCollection from '../../mollecules/Select/Collection';
 import SelectPemustaka from '../../mollecules/Select/Pemustaka';
 import SelectDepartement from '../../mollecules/Select/Departement';
+import SelectCategory from '../../mollecules/Select/Category';
 
 const CardResearchReport = (props) => {
   const { user } = props;
@@ -33,6 +34,7 @@ const CardResearchReport = (props) => {
 
   const [collection, setCollection] = useState('');
   const [departement, setDepartement] = useState('');
+  const [category, setCategory] = useState('');
   const [authors, setAuthors] = useState([]);
   const [fileValidityPage, setFileValidityPage] = useState(null);
   const [fileCoverAndListContent, setCoverAndListContent] = useState(null);
@@ -59,6 +61,7 @@ const CardResearchReport = (props) => {
     data.append('authors', authors || []);
     data.append('collection_id', collection || '');
     data.append('departement_id', departement || '');
+    data.append('category_id', category || '');
     data.append('title', repository?.title);
     data.append('abstract', repository?.abstract);
     data.append('date_validated', repository?.date_validated);
@@ -76,7 +79,7 @@ const CardResearchReport = (props) => {
 
       if (response?.code >= 300) {
         toast.error(response?.message, { toastId: 'error' });
-        setErrors({});
+        setErrors();
         return;
       }
 
@@ -86,7 +89,7 @@ const CardResearchReport = (props) => {
       } else if (user?.role === 'Mahasiswa') {
         router.push('/mahasiswa/repositori');
       }
-      setErrors({});
+      setErrors();
     } catch (error) {
     } finally {
       setLoading(false);
@@ -117,6 +120,10 @@ const CardResearchReport = (props) => {
     setDepartement(value || '');
   };
 
+  const handleCategoryChange = ({ value }) => {
+    setCategory(value);
+  };
+
   return (
     <Card className="w-full bg-white rounded-lg overflow-hidden h-fit xl:col-span-9">
       <CardHeader className="w-full border-l-4 border-grayish-blue bg-pastel-grey p-4 bg-lynch">
@@ -136,7 +143,7 @@ const CardResearchReport = (props) => {
               id="title"
               placeholder="Judul Repositori"
               value={repository.title}
-              onChange={(value) => setRepository({ ...repository, title: value })}
+              onChange={(event) => setRepository({ ...repository, title: event.target.value })}
               error={errors?.title}
             />
             {errors && <p className="text-red text-sm">{errors?.title}</p>}
@@ -152,6 +159,14 @@ const CardResearchReport = (props) => {
               error={errors?.collection_id}
             />
             {errors && <p className="text-red text-sm">{errors?.collection_id}</p>}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="collection">
+              Pilih Kategori
+              <ImportantField />
+            </label>
+            <SelectCategory onCategoryChange={handleCategoryChange} error={errors?.category_id} />
+            {errors && <p className="text-red text-sm">{errors?.category_id}</p>}
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="departement">

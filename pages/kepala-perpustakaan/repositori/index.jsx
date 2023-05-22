@@ -29,6 +29,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import { BiChevronRight } from 'react-icons/bi';
 import { FormatDateIntl } from '../../../helper/format_date_intl';
+import SelectCategory from '../../../components/mollecules/Select/Category';
 
 const KepalaPerpustakaanRepositori = ({ data }) => {
   const [isFetching, setIsFetching] = useState(true);
@@ -43,12 +44,14 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
   const [query, setQuery] = useState('');
   const [keyword, setKeyword] = useState('');
   const [collection, setCollection] = useState('');
+  const [category, setCategory] = useState('');
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
@@ -57,12 +60,23 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
   const getAllRepositoriesAPI = useCallback(
-    async (keyword, collection_id, departement_id, improvement, sort, status, limit, currPage) => {
+    async (
+      keyword,
+      collection_id,
+      category_id,
+      departement_id,
+      improvement,
+      sort,
+      status,
+      limit,
+      currPage,
+    ) => {
       try {
         setLoading(true);
         const response = await getAllRepositories(
           keyword,
           collection_id,
+          category_id,
           departement_id,
           improvement,
           sort,
@@ -87,6 +101,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
       getAllRepositoriesAPI(
         keyword,
         collection,
+        category,
         departement,
         improvement,
         sort,
@@ -101,6 +116,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
     getAllRepositoriesAPI,
     keyword,
     collection,
+    category,
     departement,
     improvement,
     sort,
@@ -142,6 +158,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
     setCurrPage(0);
     setKeyword(query);
     setCollection(collectionFilter || '');
+    setCategory(categoryFilter || '');
     setDepartement(departementFilter || '');
     setImprovement(
       improvementFilter === 'Semua' ? '' : improvementFilter === 'Hasil pengembangan' ? '1' : '0',
@@ -163,6 +180,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
   const handlerClearFilter = () => {
     setIsFetching(true);
     setCollectionFilter('');
+    setCategoryFilter('');
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
@@ -171,6 +189,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
     setQuery('');
     setKeyword('');
     setCollection('');
+    setCategory('');
     setDepartement('');
     setImprovement('');
     setStatus('');
@@ -183,6 +202,10 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
 
   const handleDepartementChange = ({ value }) => {
     setDepartementFilter(value);
+  };
+
+  const handleCategoryChange = ({ value }) => {
+    setCategoryFilter(value);
   };
 
   return (
@@ -279,7 +302,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
                                     {item.collection}
                                   </Badge>
                                   <Badge borderColor="border-red" textColor="text-red">
-                                    {item.departement}
+                                    {item.category}
                                   </Badge>
                                 </div>
                               </div>
@@ -327,6 +350,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
         direction="right"
         size={400}
         lockBackgroundScroll={true}
+        className="overflow-y-auto"
       >
         <div className="p-4 text-center">
           <h3 className="font-semibold text-lg md:text-xl">Filter</h3>
@@ -340,6 +364,12 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
               Koleksi
             </label>
             <SelectCollection onCollectionChange={handleCollectionChange} visibility="" />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Kategori
+            </label>
+            <SelectCategory onCategoryChange={handleCategoryChange} />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">

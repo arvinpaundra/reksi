@@ -20,6 +20,7 @@ import { getExaminedRepositories } from '../../../../services/repository';
 import SelectCollection from '../../../../components/mollecules/Select/Collection';
 import SelectDepartement from '../../../../components/mollecules/Select/Departement';
 import { FormatDateIntl } from '../../../../helper/format_date_intl';
+import SelectCategory from '../../../../components/mollecules/Select/Category';
 
 const RepositoriDiuji = (props) => {
   const { data } = props;
@@ -33,12 +34,14 @@ const RepositoriDiuji = (props) => {
   const [query, setQuery] = useState('');
   const [keyword, setKeyword] = useState('');
   const [collection, setCollection] = useState('');
+  const [category, setCategory] = useState('');
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
@@ -51,6 +54,7 @@ const RepositoriDiuji = (props) => {
       pemustaka_id,
       keyword,
       collection_id,
+      category_id,
       departement_id,
       improvement,
       status,
@@ -65,6 +69,7 @@ const RepositoriDiuji = (props) => {
           pemustaka_id,
           keyword,
           collection_id,
+          category_id,
           departement_id,
           improvement,
           status,
@@ -97,6 +102,7 @@ const RepositoriDiuji = (props) => {
       payloads.id,
       keyword,
       collection,
+      category,
       departement,
       improvement,
       status,
@@ -108,6 +114,7 @@ const RepositoriDiuji = (props) => {
     getMentoredRepositoriesAPI,
     keyword,
     collection,
+    category,
     departement,
     improvement,
     status,
@@ -130,6 +137,7 @@ const RepositoriDiuji = (props) => {
     setCurrPage(0);
     setKeyword(query);
     setCollection(collectionFilter || '');
+    setCategory(categoryFilter || '');
     setDepartement(departementFilter || '');
     setImprovement(
       improvementFilter === 'Semua' ? '' : improvementFilter === 'Hasil pengembangan' ? '1' : '0',
@@ -150,6 +158,7 @@ const RepositoriDiuji = (props) => {
 
   const handlerClearFilter = () => {
     setCollectionFilter('');
+    setCategoryFilter('');
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
@@ -158,6 +167,7 @@ const RepositoriDiuji = (props) => {
     setQuery('');
     setKeyword('');
     setCollection('');
+    setCategory('');
     setDepartement('');
     setImprovement('');
     setStatus('');
@@ -170,6 +180,10 @@ const RepositoriDiuji = (props) => {
 
   const handleDepartementChange = ({ value }) => {
     setDepartementFilter(value);
+  };
+
+  const handleCategoryChange = ({ value }) => {
+    setCategoryFilter(value);
   };
 
   return (
@@ -252,7 +266,7 @@ const RepositoriDiuji = (props) => {
                                     {item.collection}
                                   </Badge>
                                   <Badge borderColor="border-red" textColor="text-red">
-                                    {item.departement}
+                                    {item.category}
                                   </Badge>
                                 </div>
                               </div>
@@ -306,6 +320,7 @@ const RepositoriDiuji = (props) => {
         direction="right"
         size={400}
         lockBackgroundScroll={true}
+        className="overflow-y-auto"
       >
         <div className="p-4 text-center">
           <h3 className="font-semibold text-lg md:text-xl">Filter</h3>
@@ -319,6 +334,12 @@ const RepositoriDiuji = (props) => {
               Koleksi
             </label>
             <SelectCollection onCollectionChange={handleCollectionChange} visibility="" />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Kategori
+            </label>
+            <SelectCategory onCategoryChange={handleCategoryChange} />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">

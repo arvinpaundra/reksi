@@ -20,12 +20,16 @@ import {
 } from '../../../services/request_access';
 import CardHeader from '../../../components/atoms/Card/CardHeader';
 import { toast } from 'react-toastify';
+import ImportantField from '../../../components/atoms/Important';
 
 const AdminsitratorRequestAccess = ({ data }) => {
   const [requestAccesses, setRequestAccesses] = useState([]);
+  const [reasons, setReasons] = useState('');
+  const [errors, setErrors] = useState(null);
   const [loading, setLoading] = useState(null);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [openModalDenied, setOpenModalDenied] = useState(false);
 
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('');
@@ -90,6 +94,42 @@ const AdminsitratorRequestAccess = ({ data }) => {
 
   const handleOpenModal = (value) => {
     setOpenModal(value);
+  };
+
+  const handleOpenDeniedModal = () => {
+    setOpenModal(false);
+    setOpenModalDenied(true);
+  };
+
+  const handleDenied = async () => {
+    setErrors(null);
+    const data = {
+      status: 'denied',
+      reasons: reasons,
+    };
+
+    try {
+      setLoading(true);
+      const response = await setUpdateRequestAccess(selected, data);
+
+      if (response?.code === 400) {
+        setErrors(response?.errors);
+        toast.warning('Mohon isi data dengan lengkap!', { toastId: 'warning' });
+        return;
+      }
+
+      if (response?.code >= 300) {
+        toast.error(response?.message, { toastId: 'error' });
+        return;
+      }
+
+      toast.success('Yeay! Sukses tolak pemustaka.');
+      setOpenModalDenied(false);
+      setReasons('');
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -294,14 +334,135 @@ const AdminsitratorRequestAccess = ({ data }) => {
       </Drawer>
 
       {/* Modal Detail */}
-      <DetailModal handleOpen={handleOpenModal} open={openModal} request_id={selected} />
+      <DetailModal
+        handleOpen={handleOpenModal}
+        handleOpenDeniedModal={handleOpenDeniedModal}
+        open={openModal}
+        request_id={selected}
+      />
+
+      {/* Modal Denied Request Access */}
+      <Transition show={openModalDenied} as={Fragment}>
+        <Dialog
+          className="relative z-10"
+          open={openModalDenied}
+          onClose={() => {
+            setOpenModalDenied(false);
+            setErrors(null);
+          }}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0">
+            <div className="flex items-center justify-center min-h-screen p-4">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <div className="fixed inset-0 overflow-y-auto py-8">
+                  <div className="flex min-h-full items-center justify-center">
+                    <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-lg bg-white shadow-xl transition-all">
+                      <CardHeader className="p-4 2xl:p-8">
+                        <h2 className="text-center font-semibold text-base md:text-lg lg:text-xl">
+                          Alasan Penolakan Permintaan Akses
+                        </h2>
+                      </CardHeader>
+
+                      <Divider />
+
+                      <CardBody className="p-4 flex flex-col gap-4 w-full">
+                        <div className="flex flex-col gap-1">
+                          <label htmlFor="reasons">
+                            Alasan
+                            <ImportantField />
+                          </label>
+                          <textarea
+                            className={`relative w-full border ${
+                              errors?.reasons ? 'border-red' : 'border-black/50'
+                            } rounded-xl py-2 px-4 outline-none focus:border-blue`}
+                            placeholder="Deskripsikan alasan penolakan"
+                            rows={5}
+                            value={reasons}
+                            onChange={(event) => setReasons(event.target.value)}
+                          />
+                          {errors && <p className="text-red text-sm">{errors?.reasons}</p>}
+                        </div>
+                      </CardBody>
+
+                      <Divider />
+
+                      <CardFooter className="flex items-center justify-center gap-4 lg:gap-6 p-4">
+                        {loading && (
+                          <>
+                            <button
+                              className="p-2 w-40 2xl:w-48 text-white font-medium rounded-xl bg-red/60 disabled:cursor-no-drop"
+                              disabled
+                            >
+                              Batal
+                            </button>
+
+                            <button
+                              className="p-2 w-40 2xl:w-48 text-white font-medium rounded-xl bg-green/60 disabled:cursor-no-drop"
+                              disabled
+                            >
+                              Simpan
+                            </button>
+                          </>
+                        )}
+
+                        {!loading && (
+                          <>
+                            <button
+                              className="p-2 w-40 2xl:w-48 text-white font-medium rounded-xl bg-red/80 hover:bg-red"
+                              onClick={() => {
+                                setOpenModalDenied(false);
+                                setOpenModal(true);
+                                setErrors(null);
+                                setReasons('');
+                              }}
+                            >
+                              Batal
+                            </button>
+
+                            <button
+                              className="p-2 w-40 2xl:w-48 text-white font-medium rounded-xl bg-green/80 hover:bg-green"
+                              onClick={handleDenied}
+                            >
+                              Simpan
+                            </button>
+                          </>
+                        )}
+                      </CardFooter>
+                    </Dialog.Panel>
+                  </div>
+                </div>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </>
   );
 };
 
 export default AdminsitratorRequestAccess;
 
-const DetailModal = ({ request_id, open, handleOpen }) => {
+const DetailModal = ({ request_id, open, handleOpen, handleOpenDeniedModal }) => {
   const [requestAccess, setRequestAccess] = useState({
     created_at: '',
     departement: '',
@@ -350,28 +511,6 @@ const DetailModal = ({ request_id, open, handleOpen }) => {
       }
 
       toast.success('Yeay! Sukses terima pemustaka.');
-      handleOpen(false);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDenied = async () => {
-    const data = {
-      status: 'denied',
-    };
-
-    try {
-      setLoading(true);
-      const response = await setUpdateRequestAccess(request_id, data);
-
-      if (response?.code >= 300) {
-        toast.error(response?.message, { toastId: 'error' });
-        return;
-      }
-
-      toast.success('Yeay! Sukses tolak pemustaka.');
       handleOpen(false);
     } catch (error) {
     } finally {
@@ -497,7 +636,7 @@ const DetailModal = ({ request_id, open, handleOpen }) => {
                           <>
                             <button
                               className="p-2 w-40 2xl:w-48 text-white font-medium rounded-xl bg-red/80 hover:bg-red"
-                              onClick={handleDenied}
+                              onClick={handleOpenDeniedModal}
                             >
                               Tolak
                             </button>

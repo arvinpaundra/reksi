@@ -9,7 +9,7 @@ const ResearchReport = ({ data }) => {
   return (
     <div>
       <Head>
-        <title>Tambah Laporan Penelitian</title>
+        <title>Unggah Laporan Penelitian</title>
       </Head>
 
       <div className="w-full min-h-screen flex flex-col justify-between">
