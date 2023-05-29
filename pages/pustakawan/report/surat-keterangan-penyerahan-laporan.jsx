@@ -3,7 +3,6 @@ import Footer from '../../../components/organisms/Footer';
 import CardFooter from '../../../components/atoms/Card/CardFooter';
 import Divider from '../../../components/atoms/Divider';
 import ImportantField from '../../../components/atoms/Important';
-import { Input } from '../../../components/atoms/Input';
 import CardBody from '../../../components/atoms/Card/CardBody';
 import CardHeader from '../../../components/atoms/Card/CardHeader';
 import Card from '../../../components/atoms/Card';
@@ -18,12 +17,13 @@ import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../../constants';
 import { AiOutlinePrinter } from 'react-icons/ai';
+import SelectRepository from '../../../components/mollecules/Select/Repository';
 
 const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
   const [payloads, setPayloads] = useState({
     pemustaka_id: '',
     collection_id: '',
-    title: '',
+    repository_id: '',
   });
   const [loading, setLoading] = useState(null);
   const [buttonLoading, setButtonLoading] = useState(null);
@@ -40,11 +40,45 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
     });
   };
 
+  const handleRepositoryChange = ({ value }) => {
+    setPayloads({
+      ...payloads,
+      repository_id: value,
+    });
+  };
+
   const handlePrint = async () => {
+    setErrors(null);
+
+    if (!payloads.pemustaka_id) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        pemustaka_id: 'This field is required',
+      }));
+    }
+
+    if (!payloads.collection_id) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        collection_id: 'This field is required',
+      }));
+    }
+
+    if (!payloads.repository_id) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        repository_id: 'This field is required',
+      }));
+    }
+
+    if (Object.keys(errors).length !== 0) {
+      return;
+    }
+
     const data = {
       pemustaka_id: payloads.pemustaka_id,
       collection_id: payloads.collection_id,
-      title: payloads.title,
+      repository_id: payloads.repository_id,
     };
 
     try {
@@ -78,8 +112,6 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
       }
     } catch (error) {
       const res = error.response;
-
-      console.log(error);
 
       if (res?.data?.code === 400) {
         setErrors(res?.data?.errors);
@@ -142,18 +174,16 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
 
               <div className="flex flex-col gap-1">
                 <label htmlFor="title">
-                  Judul Karya Tulis Ilmiah
+                  Pilih Karya Tulis Ilmiah
                   <ImportantField />
                 </label>
-                <Input
-                  type="text"
-                  id="title"
-                  placeholder="Judul Karya Tulis Ilmiah"
-                  value={payloads.title}
-                  onChange={(event) => setPayloads({ ...payloads, title: event.target.value })}
-                  error={errors?.title}
+                <SelectRepository
+                  collection_id={payloads.collection_id}
+                  error={errors?.repository_id}
+                  onRepositoryChange={handleRepositoryChange}
+                  pemustaka_id={payloads.pemustaka_id}
                 />
-                {errors && <p className="text-red text-sm">{errors?.title}</p>}
+                {errors && <p className="text-red text-sm">{errors?.repository_id}</p>}
               </div>
             </CardBody>
 

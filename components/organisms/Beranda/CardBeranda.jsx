@@ -61,7 +61,7 @@ const CardBeranda = (props) => {
             <Link href={`/repositori/${item.id}`} key={item.id}>
               <a>
                 <div className="p-4 md:p-6 md:flex md:gap-4">
-                  <img src="/images/Rectangle.png" alt="" className="hidden md:block w-24 h-32" />
+                  <img src="/images/pdf.png" alt="" className="hidden md:block w-20 h-20" />
                   <div>
                     <h3 className="text-base font-medium text-justify mb-1">{item.title}</h3>
                     {item.authors.map((author) => (

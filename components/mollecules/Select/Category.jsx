@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import Select from 'react-select';
-import { getAllCategories } from '../../../services/category';
+import { getCategories } from '../../../services/category';
 import useDebounce from '../../../hooks/use-debounce';
 import DropdownIndicator from '../../atoms/DropdownIndicator';
 
@@ -9,13 +9,14 @@ const SelectCategory = ({ error, onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(null);
   const [search, setSearch] = useState('');
+  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
   const categoryDeb = useDebounce(search, 500);
   const getCategoriesAPI = useCallback(async (keyword) => {
     try {
       setLoading(true);
 
-      const response = await getAllCategories(keyword, 5, 0);
+      const response = await getCategories(keyword, 5, 0);
 
       const transformedResponses = response?.data?.map((item) => ({
         value: item.id,
@@ -32,6 +33,12 @@ const SelectCategory = ({ error, onCategoryChange }) => {
   useEffect(() => {
     getCategoriesAPI(categoryDeb);
   }, [getCategoriesAPI, categoryDeb]);
+
+  useEffect(() => {
+    if (document.body !== 'undefined') {
+      setMenuPortalTarget(document.body);
+    }
+  }, []);
 
   const handleSearchInputChange = (inputValue) => {
     setSearch(inputValue);
@@ -70,6 +77,10 @@ const SelectCategory = ({ error, onCategoryChange }) => {
           ...provided,
           zIndex: 9999,
         }),
+        menuPortal: (provided, staate) => ({
+          ...provided,
+          zIndex: 9999,
+        }),
       }}
       placeholder="Pilih Kategori"
       noOptionsMessage={() => 'Kategori tidak ditemukan'}
@@ -78,6 +89,7 @@ const SelectCategory = ({ error, onCategoryChange }) => {
       isSearchable
       value={selectedOption}
       onChange={handleCategoryChange}
+      menuPortalTarget={menuPortalTarget}
       isLoading={loading}
       loadingMessage={() => 'Memuat . . .'}
       menuPlacement="auto"

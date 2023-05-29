@@ -17,7 +17,7 @@ export const NavbarBadge = ({ setIsOpen, authenticated, user }) => {
           className="p-2 rounded-full overflow-hidden flex items-center justify-center gap-2 bg-white cursor-pointer"
         >
           <div className="w-8 h-8 rounded-full overflow-hidden">
-            <img src={user?.avatar} alt="Profile Picture" className="object-cover" />
+            <img src={user?.avatar} alt="Profile Picture" className="w-full h-full object-cover" />
           </div>
           <div>
             <IoMenu size={20} color="black" />

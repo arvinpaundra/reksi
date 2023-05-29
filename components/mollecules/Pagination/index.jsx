@@ -9,7 +9,7 @@ const Paginate = (props) => {
         previousLabel="< Prev"
         nextLabel="Next >"
         onPageChange={pageChange}
-        pageCount={Math.min(10, pages)}
+        pageCount={Math.min(5, pages)}
         pageRangeDisplayed={2}
         breakClassName="px-4 py-2 bg-white cursor-default tracking-widest"
         containerClassName="flex items-center text-black/90 select-none"

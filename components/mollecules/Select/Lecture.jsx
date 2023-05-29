@@ -10,6 +10,7 @@ const SelectLecture = ({ error, onLectureChange }) => {
   const [lecturers, setLecturers] = useState([]);
   const [loading, setLoading] = useState(null);
   const [search, setSearch] = useState('');
+  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
   const lecturerDeb = useDebounce(search, 500);
   const getLecturersAPI = useCallback(async (keyword) => {
@@ -34,6 +35,12 @@ const SelectLecture = ({ error, onLectureChange }) => {
   useEffect(() => {
     getLecturersAPI(lecturerDeb);
   }, [getLecturersAPI, lecturerDeb]);
+
+  useEffect(() => {
+    if (document.body !== 'undefined') {
+      setMenuPortalTarget(document.body);
+    }
+  }, []);
 
   const handleSearchInputChange = (inputValue) => {
     setSearch(inputValue);
@@ -77,6 +84,10 @@ const SelectLecture = ({ error, onLectureChange }) => {
           ...provided,
           zIndex: 9999,
         }),
+        menuPortal: (provided, staate) => ({
+          ...provided,
+          zIndex: 9999,
+        }),
       }}
       placeholder="Pilih Dosen"
       noOptionsMessage={() => 'Dosen tidak ditemukan'}
@@ -84,6 +95,7 @@ const SelectLecture = ({ error, onLectureChange }) => {
       onInputChange={handleSearchInputChange}
       isSearchable
       value={selectedOption}
+      menuPortalTarget={menuPortalTarget}
       onChange={handleLecturerChange}
       isLoading={loading}
       loadingMessage={() => 'Memuat . . .'}

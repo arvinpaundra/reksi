@@ -158,8 +158,8 @@ const AdministratorEditPemustaka = ({ data }) => {
             <CardBody className="p-4 md:p-6 flex flex-col gap-4">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-medium">Data Pribadi</h3>
-                <div className="flex flex-col gap-1 w-fit rounded-full overflow-hidden">
-                  <label htmlFor="avatar" className="relative">
+                <div className="flex flex-col gap-1 w-fit">
+                  <label htmlFor="avatar" className="relative rounded-full overflow-hidden">
                     <input
                       type="file"
                       name="avatar"
@@ -183,13 +183,14 @@ const AdministratorEditPemustaka = ({ data }) => {
                       <img
                         src={pemustaka?.avatar}
                         alt=""
-                        className="w-20 md:w-24 h-20 xl:w-32 md:h-32 rounded-full object-cover"
+                        className="w-20 h-20 md:w-32 md:h-32 rounded-full object-cover"
                       />
                     )}
                     <div className="w-full h-full absolute top-0 right-0 opacity-0 hover:opacity-100 hover:bg-orange/50 hover:transition hover:ease-in-out hover:duration-300 flex items-center justify-center cursor-pointer">
                       <AiOutlineCloudUpload color="white" size={28} />
                     </div>
                   </label>
+                  {errors && <p className="text-red text-sm">{errors?.avatar}</p>}
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-sm text-black" htmlFor="name">

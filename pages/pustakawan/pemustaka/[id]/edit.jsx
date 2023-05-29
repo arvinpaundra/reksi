@@ -155,8 +155,8 @@ const PustakawanEditPemustaka = ({ data }) => {
             <CardBody className="p-4 md:p-6 flex flex-col gap-4">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-medium">Data Pribadi</h3>
-                <div className="flex flex-col gap-1 w-fit rounded-full overflow-hidden">
-                  <label htmlFor="avatar" className="relative">
+                <div className="flex flex-col gap-1 w-fit">
+                  <label htmlFor="avatar" className="relative rounded-full overflow-hidden">
                     <input
                       type="file"
                       name="avatar"
@@ -187,6 +187,7 @@ const PustakawanEditPemustaka = ({ data }) => {
                       <AiOutlineCloudUpload color="white" size={28} />
                     </div>
                   </label>
+                  {errors && <p className="text-red text-sm">{errors?.avatar}</p>}
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-sm text-black" htmlFor="name">

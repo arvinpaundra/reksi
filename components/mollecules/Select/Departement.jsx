@@ -10,6 +10,7 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
   const [selectedOption, setSelectedOption] = useState();
   const [departements, setDepartements] = useState([]);
   const [searchDepartement, setSearchDepartement] = useState('');
+  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
   const departementDeb = useDebounce(searchDepartement, 500);
 
@@ -33,6 +34,12 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
   useEffect(() => {
     getAllDepartementsAPI(departementDeb);
   }, [getAllDepartementsAPI, departementDeb]);
+
+  useEffect(() => {
+    if (document.body !== 'undefined') {
+      setMenuPortalTarget(document.body);
+    }
+  }, []);
 
   const handleSearchInputChange = (inputValue) => {
     setSearchDepartement(inputValue);
@@ -71,6 +78,10 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
           ...provided,
           zIndex: 9999,
         }),
+        menuPortal: (provided, staate) => ({
+          ...provided,
+          zIndex: 9999,
+        }),
       }}
       placeholder="Pilih Jurusan"
       noOptionsMessage={() => 'Jurusan tidak ditemukan'}
@@ -79,6 +90,7 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
       isSearchable
       value={selectedOption}
       onChange={handleDepartementChange}
+      menuPortalTarget={menuPortalTarget}
       isLoading={loading}
       loadingMessage={() => 'Memuat . . .'}
       isClearable

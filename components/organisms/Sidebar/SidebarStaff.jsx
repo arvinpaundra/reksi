@@ -202,6 +202,9 @@ const SidebarStaff = ({ data, role }) => {
                       <Link href="/administrator/koleksi">
                         <a className="py-3 pl-12 pr-3 hover:bg-blue/5">Koleksi</a>
                       </Link>
+                      <Link href="/administrator/kategori">
+                        <a className="py-3 pl-12 pr-3 hover:bg-blue/5">Kategori</a>
+                      </Link>
                       <Link href="/administrator/role">
                         <a className="py-3 pl-12 pr-3 hover:bg-blue/5">Role</a>
                       </Link>
@@ -371,6 +374,9 @@ const SidebarStaff = ({ data, role }) => {
                       <Link href="/pustakawan/koleksi">
                         <a className="py-3 pl-12 pr-3 hover:bg-blue/5">Koleksi</a>
                       </Link>
+                      <Link href="/pustakawan/kategori">
+                        <a className="py-3 pl-12 pr-3 hover:bg-blue/5">Kategori</a>
+                      </Link>
                     </div>
                   )}
 
@@ -502,6 +508,9 @@ const SidebarStaff = ({ data, role }) => {
                     <div className="duration-75 flex flex-col text-sm 2xl:text-base font-normal">
                       <Link href="/kepala-perpustakaan/pemustaka">
                         <a className="py-3 pl-12 pr-3 hover:bg-blue/5">Pemustaka</a>
+                      </Link>
+                      <Link href="/kepala-perpustakaan/petugas">
+                        <a className="py-3 pl-12 pr-3 hover:bg-blue/5">Petugas</a>
                       </Link>
                       <Link href="/kepala-perpustakaan/repositori">
                         <a className="py-3 pl-12 pr-3 hover:bg-blue/5">

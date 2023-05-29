@@ -15,10 +15,11 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { API_URL } from '../../../constants';
 
-const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
+const AdministratorRekapPengumpulanLaporan = ({ data }) => {
   const [report, setReport] = useState({
     items: [],
-    total: 0,
+    total_collected: 0,
+    total_not_collected: 0,
   });
   const [filter, setFilter] = useState({
     year_gen: '',
@@ -35,13 +36,18 @@ const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
       setLoading(true);
       const response = await getRecapCollectedReport(year_gen, collection_id);
 
-      const total = response?.data.reduce((acc, curr) => {
+      const totalCollected = response?.data.reduce((acc, curr) => {
         return acc + curr?.pemustaka_count;
+      }, 0);
+
+      const totalNotCollected = response?.data.reduce((acc, curr) => {
+        return acc + curr?.total_pemustakas - curr?.pemustaka_count;
       }, 0);
 
       setReport({
         items: [...response?.data],
-        total: total,
+        total_collected: totalCollected,
+        total_not_collected: totalNotCollected,
       });
     } catch (error) {
     } finally {
@@ -67,7 +73,6 @@ const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
   };
 
   const handlePrint = async () => {
-    console.log(collection);
     if (collection === '' || collection === undefined) {
       setErrors({
         collection_id: 'This field is required',
@@ -86,7 +91,7 @@ const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
             Authorization: `Bearer ${token}`,
           },
           responseType: 'blob',
-          timeout: 30000,
+          timeout: 60000,
         },
       );
 
@@ -164,7 +169,8 @@ const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
                     <tr className="border-b border-gray/30">
                       <td className="py-4">No.</td>
                       <td className="py-4">Program Studi</td>
-                      <td className="py-4">Jumlah</td>
+                      <td className="py-4">Sudah mengumpulkan</td>
+                      <td className="py-4">Belum mengumpulkan</td>
                     </tr>
                   </thead>
                   <tbody className="text-center">
@@ -185,13 +191,15 @@ const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
                           <td className="py-6">{index + 1}.</td>
                           <td className="py-6">{item.study_program}</td>
                           <td className="py-6">{item.pemustaka_count}</td>
+                          <td className="py-6">{item.total_pemustakas - item.pemustaka_count}</td>
                         </tr>
                       ))}
                     <tr className="even:bg-blue/5 hover:bg-blue/5 font-semibold border-t border-gray/30">
                       <td colSpan={2} className="py-6 text-center">
-                        Total Karya Tulis Ilmiah
+                        Total
                       </td>
-                      <td className="py-6">{report.total}</td>
+                      <td className="py-6">{report.total_collected}</td>
+                      <td className="py-6">{report.total_not_collected}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -228,7 +236,7 @@ const KepalaPerpustakaanRekapPengumpulanLaporan = ({ data }) => {
   );
 };
 
-export default KepalaPerpustakaanRekapPengumpulanLaporan;
+export default AdministratorRekapPengumpulanLaporan;
 
 export function getServerSideProps({ req }) {
   const { token } = req.cookies;

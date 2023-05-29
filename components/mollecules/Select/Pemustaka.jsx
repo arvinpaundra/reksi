@@ -12,7 +12,7 @@ const SelectPemustaka = ({ index, onPemustakaChange, error }) => {
   const [searchPemustaka, setSearchPemustaka] = useState('');
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
-  const pemsutakaDeb = useDebounce(searchPemustaka, 500);
+  const pemustakaDeb = useDebounce(searchPemustaka, 500);
 
   const getAllPemustakaAPI = useCallback(async (keyword) => {
     try {
@@ -34,9 +34,15 @@ const SelectPemustaka = ({ index, onPemustakaChange, error }) => {
   }, []);
 
   useEffect(() => {
-    getAllPemustakaAPI(pemsutakaDeb);
+    getAllPemustakaAPI(pemustakaDeb);
     setMenuPortalTarget(document.body);
-  }, [getAllPemustakaAPI, pemsutakaDeb]);
+  }, [getAllPemustakaAPI, pemustakaDeb]);
+
+  useEffect(() => {
+    if (document.body !== 'undefined') {
+      setMenuPortalTarget(document.body);
+    }
+  }, []);
 
   const handleSearchInputChange = (inputValue) => {
     setSearchPemustaka(inputValue);
@@ -74,6 +80,10 @@ const SelectPemustaka = ({ index, onPemustakaChange, error }) => {
           padding: '8px 16px',
           color: 'black',
           backgroundColor: state.isFocused ? 'rgb(0 161 117 / 0.1)' : 'white',
+        }),
+        menuPortal: (provided, staate) => ({
+          ...provided,
+          zIndex: 9999,
         }),
       }}
       placeholder="Pilih Pemustaka"

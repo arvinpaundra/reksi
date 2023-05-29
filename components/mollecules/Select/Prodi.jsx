@@ -28,6 +28,12 @@ const SelectProdi = ({ onProdiChange, error, departement_id }) => {
     setMenuPortalTarget(document.body);
   }, [getProdiAPI, departement_id]);
 
+  useEffect(() => {
+    if (document.body !== 'undefined') {
+      setMenuPortalTarget(document.body);
+    }
+  }, []);
+
   const handleProdiChange = (option) => {
     setSelectedOption(option);
     onProdiChange(option ?? '');
@@ -55,6 +61,10 @@ const SelectProdi = ({ onProdiChange, error, departement_id }) => {
           padding: '8px 16px',
           color: 'black',
           backgroundColor: state.isFocused ? 'rgb(0 161 117 / 0.1)' : 'white',
+        }),
+        menuPortal: (provided, staate) => ({
+          ...provided,
+          zIndex: 9999,
         }),
       }}
       placeholder="Pilih Program Studi"

@@ -62,6 +62,7 @@ const KepalaPerpustakaanDetailRepository = ({ data }) => {
   }, [getDetailRepositoryAPI, id]);
 
   const title = repository?.title;
+  const formatUpdateDesc = repository?.update_desc?.replace(/\r\n/g, '<br/>');
 
   return (
     <div>
@@ -92,9 +93,9 @@ const KepalaPerpustakaanDetailRepository = ({ data }) => {
                   <CardBody>
                     <div className="p-4 md:p-6 md:flex md:gap-4">
                       <img
-                        src="/images/Rectangle.png"
+                        src="/images/pdf.png"
                         alt=""
-                        className="hidden lg:block w-40 h-52"
+                        className="hidden lg:block w-40 h-52w-32 h-32"
                       />
                       <div>
                         <h2 className="text-base font-semibold text-justify mb-2">
@@ -190,6 +191,25 @@ const KepalaPerpustakaanDetailRepository = ({ data }) => {
                         )}
                       </div>
                     </div>
+
+                    {repository?.update_desc && (
+                      <>
+                        <Divider />
+
+                        <div className="p-4 md:p-6">
+                          <h3 className="font-semibold text-lg mb-2 md:mb-4">Hasil Pengembangan</h3>
+                          <div className="flex flex-col gap-2">
+                            <TextInfo label="Judul Terkait" value={repository?.related_title} />
+                            <div>
+                              <p className="text-sm text-secondary mb-0.5">
+                                Deksripsi pengembangan
+                              </p>
+                              <div dangerouslySetInnerHTML={{ __html: formatUpdateDesc }} />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     <Divider />
 

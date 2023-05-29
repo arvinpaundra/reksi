@@ -280,9 +280,9 @@ const RepositoriDosen = (props) => {
                             <a>
                               <div className="p-4 md:px-6 lg:px-10 md:flex md:gap-4">
                                 <img
-                                  src="/images/Rectangle.png"
+                                  src="/images/pdf.png"
                                   alt=""
-                                  className="hidden md:block w-24 h-32"
+                                  className="hidden md:block w-20 h-20"
                                 />
                                 <div>
                                   <h3 className="text-base font-medium text-justify mb-1">

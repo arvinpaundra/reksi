@@ -34,6 +34,12 @@ const SelectCollection = ({ error, onCollectionChange, visibility }) => {
     getCollectionsAPI(collectionDeb, visibility);
   }, [getCollectionsAPI, collectionDeb, visibility]);
 
+  useEffect(() => {
+    if (document.body !== 'undefined') {
+      setMenuPortalTarget(document.body);
+    }
+  }, []);
+
   const handleSearchInputChange = (inputValue) => {
     setSearch(inputValue);
   };
@@ -68,6 +74,10 @@ const SelectCollection = ({ error, onCollectionChange, visibility }) => {
           zIndex: 1000,
         }),
         menu: (provided, state) => ({
+          ...provided,
+          zIndex: 9999,
+        }),
+        menuPortal: (provided, staate) => ({
           ...provided,
           zIndex: 9999,
         }),
