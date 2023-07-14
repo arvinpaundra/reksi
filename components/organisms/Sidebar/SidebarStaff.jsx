@@ -249,16 +249,6 @@ const SidebarStaff = ({ data, role }) => {
                   <Divider />
                 </div>
 
-                <Link href="/administrator/tandatangan">
-                  <a className="hover:bg-blue/5">
-                    <div className="flex items-center gap-3 p-4">
-                      <FaSignature size={20} />
-                      <p className="text-sm 2xl:text-base font-normal">Unggah Tandatangan</p>
-                    </div>
-
-                    <Divider />
-                  </a>
-                </Link>
                 <Link href="/administrator/ganti-sandi">
                   <a className="hover:bg-blue/5">
                     <div className="flex items-center gap-3 p-4">
@@ -417,16 +407,6 @@ const SidebarStaff = ({ data, role }) => {
                   <Divider />
                 </div>
 
-                <Link href="/pustakawan/tandatangan">
-                  <a className="hover:bg-blue/5">
-                    <div className="flex items-center gap-3 p-4">
-                      <FaSignature size={20} />
-                      <p className="text-sm 2xl:text-base font-normal">Unggah Tandatangan</p>
-                    </div>
-
-                    <Divider />
-                  </a>
-                </Link>
                 <Link href="/pustakawan/ganti-sandi">
                   <a className="hover:bg-blue/5">
                     <div className="flex items-center gap-3 p-4">
@@ -553,16 +533,6 @@ const SidebarStaff = ({ data, role }) => {
 
                   <Divider />
                 </div>
-                <Link href="/kepala-perpustakaan/tandatangan">
-                  <a className="hover:bg-blue/5">
-                    <div className="flex items-center gap-3 p-4">
-                      <FaSignature size={20} />
-                      <p className="text-sm 2xl:text-base font-normal">Unggah Tandatangan</p>
-                    </div>
-
-                    <Divider />
-                  </a>
-                </Link>
                 <Link href="/kepala-perpustakaan/ganti-sandi">
                   <a className="hover:bg-blue/5">
                     <div className="flex items-center gap-3 p-4">

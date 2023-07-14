@@ -18,6 +18,7 @@ import { ButtonFilled } from '../../../../components/atoms/Button';
 import Footer from '../../../../components/organisms/Footer';
 import SelectLecture from '../../../../components/mollecules/SelectLecture';
 import SelectPemustaka from '../../../../components/mollecules/Select/Pemustaka';
+import { setCreateInternshipReport } from '../../../../services/repository';
 
 const PustakawanMagangIndustri = ({ data }) => {
   const router = useRouter();
