@@ -17,6 +17,7 @@ import SelectProdi from '../../mollecules/SelectProdi';
 import SelectDepartement from '../../mollecules/SelectDepartement';
 import { toast } from 'react-toastify';
 import { FormatDateIntl } from '../../../helper/format_date_intl';
+import { regex } from '../../../helper/regex';
 
 const CardProfilMahasiswa = (props) => {
   const { data } = props;
@@ -228,7 +229,9 @@ const CardProfilMahasiswa = (props) => {
                 type="text"
                 placeholder="Nomor Telepon"
                 value={pemustaka.telp}
-                onChange={(event) => setPemustaka({ ...pemustaka, telp: event.target.value })}
+                onChange={(event) =>
+                  setPemustaka({ ...pemustaka, telp: regex.numeric(event.target.value, 13) })
+                }
               />
             ) : (
               <p>{!pemustaka.telp?.length ? 'Belum diisi' : pemustaka.telp}</p>
@@ -357,7 +360,10 @@ const CardProfilMahasiswa = (props) => {
                     placeholder="Nomor Induk Mahasiswa"
                     value={pemustaka.identity_number}
                     onChange={(event) =>
-                      setPemustaka({ ...pemustaka, identity_number: event.target.value })
+                      setPemustaka({
+                        ...pemustaka,
+                        identity_number: regex.numeric(event.target.value, 50),
+                      })
                     }
                     error={errors?.identity_number}
                   />
@@ -437,7 +443,9 @@ const CardProfilMahasiswa = (props) => {
                   type="text"
                   placeholder="Tahun Angkatan"
                   value={pemustaka.year_gen}
-                  onChange={(event) => setPemustaka({ ...pemustaka, year_gen: event.target.value })}
+                  onChange={(event) =>
+                    setPemustaka({ ...pemustaka, year_gen: regex.numeric(event.target.value, 4) })
+                  }
                 />
               ) : (
                 <p>{!pemustaka.year_gen?.length ? 'Belum diisi' : pemustaka.year_gen}</p>

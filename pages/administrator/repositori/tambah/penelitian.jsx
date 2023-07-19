@@ -86,12 +86,8 @@ const AdministratorPenelitian = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses unggah repositori.');
-      if (user?.role === 'Dosen') {
-        router.push('/dosen/repositori/dibuat');
-      } else if (user?.role === 'Mahasiswa') {
-        router.push('/mahasiswa/repositori');
-      }
+      toast.success('Yeay! Sukses unggah karya tulis ilmiah.');
+      router.push('/administrator/repositori');
       setErrors({});
     } catch (error) {
     } finally {

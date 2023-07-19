@@ -20,6 +20,7 @@ import CardFooter from '../../components/atoms/Card/CardFooter';
 import { ButtonFilled } from '../../components/atoms/Button';
 import { toast } from 'react-toastify';
 import { FormatDateIntl } from '../../helper/format_date_intl';
+import { regex } from '../../helper/regex';
 
 const PustakawanProfil = ({ data }) => {
   const [isFetching, setIsFetching] = useState(true);
@@ -207,23 +208,47 @@ const PustakawanProfil = ({ data }) => {
                   </div>
                 )}
 
-                <div className="flex flex-col gap-1">
-                  <label
-                    className={`text-sm ${enableEdit ? 'text-black' : 'text-secondary'}`}
-                    htmlFor="telp"
-                  >
-                    No. Telepon
-                  </label>
-                  {enableEdit ? (
-                    <Input
-                      type="text"
-                      placeholder="Nomor Telepon"
-                      value={staff.telp}
-                      onChange={(event) => setStaff({ ...staff, telp: event.target.value })}
-                    />
-                  ) : (
-                    <p>{!staff.telp?.length ? 'Belum diisi' : staff.telp}</p>
-                  )}
+                <div className="w-full flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-4">
+                  <div className="flex flex-col gap-1 w-full md:col-span-6">
+                    <label
+                      className={`text-sm ${enableEdit ? 'text-black' : 'text-secondary'}`}
+                      htmlFor="telp"
+                    >
+                      NIP
+                    </label>
+                    {enableEdit ? (
+                      <Input
+                        type="text"
+                        placeholder="NIP"
+                        value={staff.nip}
+                        onChange={(event) =>
+                          setStaff({ ...staff, nip: regex.numeric(event.target.value, 18) })
+                        }
+                      />
+                    ) : (
+                      <p>{!staff.nip?.length ? 'Belum diisi' : staff.nip}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1 w-full md:col-span-6">
+                    <label
+                      className={`text-sm ${enableEdit ? 'text-black' : 'text-secondary'}`}
+                      htmlFor="telp"
+                    >
+                      No. Telepon
+                    </label>
+                    {enableEdit ? (
+                      <Input
+                        type="text"
+                        placeholder="Nomor Telepon"
+                        value={staff.telp}
+                        onChange={(event) =>
+                          setStaff({ ...staff, telp: regex.numeric(event.target.value, 13) })
+                        }
+                      />
+                    ) : (
+                      <p>{!staff.telp?.length ? 'Belum diisi' : staff.telp}</p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="w-full flex flex-col items-center justify-center md:grid md:grid-cols-12 gap-4">

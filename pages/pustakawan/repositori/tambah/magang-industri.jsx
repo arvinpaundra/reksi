@@ -84,7 +84,7 @@ const PustakawanMagangIndustri = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses unggah repositori.');
+      toast.success('Yeay! Sukses unggah karya tulis ilmiah.');
       router.push('/pustakawan/repositori');
     } catch (error) {
     } finally {

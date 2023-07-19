@@ -98,7 +98,7 @@ const AdministratorTugasAkhir = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses unggah repositori.');
+      toast.success('Yeay! Sukses unggah karya tulis ilmiah.');
       router.push('/administrator/repositori');
     } catch (error) {
     } finally {

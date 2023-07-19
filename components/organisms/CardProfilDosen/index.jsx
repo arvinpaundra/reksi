@@ -16,6 +16,7 @@ import SelectDepartement from '../../mollecules/SelectDepartement';
 import SelectProdi from '../../mollecules/SelectProdi';
 import CardFooter from '../../atoms/Card/CardFooter';
 import { ButtonFilled } from '../../atoms/Button';
+import { regex } from '../../../helper/regex';
 
 const CardProfilDosen = (props) => {
   const { data } = props;
@@ -227,7 +228,9 @@ const CardProfilDosen = (props) => {
                 type="text"
                 placeholder="Nomor Telepon"
                 value={pemustaka.telp}
-                onChange={(event) => setPemustaka({ ...pemustaka, telp: event.target.value })}
+                onChange={(event) =>
+                  setPemustaka({ ...pemustaka, telp: regex.numeric(event.target.value, 13) })
+                }
               />
             ) : (
               <p>{!pemustaka.telp?.length ? 'Belum diisi' : pemustaka.telp}</p>
@@ -352,7 +355,10 @@ const CardProfilDosen = (props) => {
                     placeholder="Nomor Induk Nasional Dosen"
                     value={pemustaka.identity_number}
                     onChange={(event) =>
-                      setPemustaka({ ...pemustaka, identity_number: event.target.value })
+                      setPemustaka({
+                        ...pemustaka,
+                        identity_number: regex.numeric(event.target.value, 50),
+                      })
                     }
                     error={errors?.identity_number}
                   />

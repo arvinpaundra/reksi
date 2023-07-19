@@ -20,6 +20,7 @@ import CardFooter from '../../components/atoms/Card/CardFooter';
 import { ButtonFilled } from '../../components/atoms/Button';
 import { toast } from 'react-toastify';
 import { FormatDateIntl } from '../../helper/format_date_intl';
+import { regex } from '../../helper/regex';
 
 const KepalaPerpustakaanProfil = ({ data }) => {
   const [isFetching, setIsFetching] = useState(true);
@@ -222,7 +223,9 @@ const KepalaPerpustakaanProfil = ({ data }) => {
                         type="text"
                         placeholder="NIP"
                         value={staff.nip}
-                        onChange={(event) => setStaff({ ...staff, nip: event.target.value })}
+                        onChange={(event) =>
+                          setStaff({ ...staff, nip: regex.numeric(event.target.value, 18) })
+                        }
                       />
                     ) : (
                       <p>{!staff.nip?.length ? 'Belum diisi' : staff.nip}</p>
@@ -240,7 +243,9 @@ const KepalaPerpustakaanProfil = ({ data }) => {
                         type="text"
                         placeholder="Nomor Telepon"
                         value={staff.telp}
-                        onChange={(event) => setStaff({ ...staff, telp: event.target.value })}
+                        onChange={(event) =>
+                          setStaff({ ...staff, telp: regex.numeric(event.target.value, 13) })
+                        }
                       />
                     ) : (
                       <p>{!staff.telp?.length ? 'Belum diisi' : staff.telp}</p>

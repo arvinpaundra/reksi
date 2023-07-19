@@ -86,7 +86,7 @@ const PustakawanPenelitian = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses unggah repositori.');
+      toast.success('Yeay! Sukses unggah karya tulis ilmiah.');
       router.push('/pustakawan/repositori');
       setErrors({});
     } catch (error) {
