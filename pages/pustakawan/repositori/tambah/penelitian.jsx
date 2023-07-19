@@ -21,6 +21,7 @@ import SelectPemustaka from '../../../../components/mollecules/Select/Pemustaka'
 import { BsFillTrashFill } from 'react-icons/bs';
 import { ButtonFilled } from '../../../../components/atoms/Button';
 import Footer from '../../../../components/organisms/Footer';
+import SelectCategory from '../../../../components/mollecules/Select/Category';
 
 const PustakawanPenelitian = ({ data }) => {
   const router = useRouter();
@@ -34,6 +35,7 @@ const PustakawanPenelitian = ({ data }) => {
     abstract: '',
   });
 
+  const [category, setCategory] = useState({});
   const [collection, setCollection] = useState('');
   const [departement, setDepartement] = useState('');
   const [authors, setAuthors] = useState([]);
@@ -62,6 +64,7 @@ const PustakawanPenelitian = ({ data }) => {
     data.append('authors', authors || []);
     data.append('collection_id', collection || '');
     data.append('departement_id', departement || '');
+    data.append('category_id', category || '');
     data.append('title', repository?.title);
     data.append('abstract', repository?.abstract);
     data.append('date_validated', repository?.date_validated);
@@ -116,6 +119,10 @@ const PustakawanPenelitian = ({ data }) => {
     setDepartement(value || '');
   };
 
+  const handleCategoryChange = ({ value }) => {
+    setCategory(value);
+  };
+
   return (
     <div>
       <Head>
@@ -149,7 +156,9 @@ const PustakawanPenelitian = ({ data }) => {
                       id="title"
                       placeholder="Judul Repositori"
                       value={repository.title}
-                      onChange={(value) => setRepository({ ...repository, title: value })}
+                      onChange={(value) =>
+                        setRepository({ ...repository, title: value.target.value })
+                      }
                       error={errors?.title}
                     />
                     {errors && <p className="text-red text-sm">{errors?.title}</p>}
@@ -165,6 +174,17 @@ const PustakawanPenelitian = ({ data }) => {
                       error={errors?.collection_id}
                     />
                     {errors && <p className="text-red text-sm">{errors?.collection_id}</p>}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="collection">
+                      Pilih Kategori
+                      <ImportantField />
+                    </label>
+                    <SelectCategory
+                      onCategoryChange={handleCategoryChange}
+                      error={errors?.category_id}
+                    />
+                    {errors && <p className="text-red text-sm">{errors?.category_id}</p>}
                   </div>
                   <div className="flex flex-col gap-1">
                     <label htmlFor="departement">

@@ -15,6 +15,8 @@ import SelectProdi from '../../mollecules/SelectProdi';
 import SelectDepartement from '../../mollecules/SelectDepartement';
 import SelectRole from '../../mollecules/SelectRole';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { regex } from '../../../helper/regex';
 
 const CardRegister = () => {
   const [index, setIndex] = useState(1);
@@ -78,6 +80,10 @@ const CardRegister = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setYearGen('');
+  }, [role]);
 
   return (
     <Card className="w-full bg-white rounded-lg overflow-hidden py-4 lg:py-8">
@@ -192,7 +198,7 @@ const CardRegister = () => {
                     type="text"
                     placeholder="Nomor Induk Mahasiswa"
                     value={identityNumber}
-                    onChange={(event) => setIdentityNumber(event.target.value)}
+                    onChange={(event) => setIdentityNumber(regex.numeric(event.target.value, 50))}
                     error={errors?.identity_number}
                   />
                   {errors && <p className="text-red text-sm">{errors?.identity_number}</p>}
@@ -206,8 +212,8 @@ const CardRegister = () => {
                     type="text"
                     placeholder="Tahun Angkatan"
                     value={yearGen}
-                    onChange={(event) => setYearGen(event.target.value)}
-                    error={errors?.yearGen}
+                    onChange={(event) => setYearGen(regex.numeric(event.target.value, 4))}
+                    error={errors?.year_gen}
                   />
                   {errors && <p className="text-red text-sm">{errors?.year_gen}</p>}
                 </div>
@@ -224,7 +230,7 @@ const CardRegister = () => {
                   type="text"
                   placeholder="Nomor Induk Dosen Nasional"
                   value={identityNumber}
-                  onChange={(event) => setIdentityNumber(event.target.value)}
+                  onChange={(event) => setIdentityNumber(regex.numeric(event.target.value, 50))}
                   error={errors?.identity_number}
                 />
                 {errors && <p className="text-red text-sm">{errors?.identity_number}</p>}

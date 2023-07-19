@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { setAddDepartement } from '../../../services/departement';
+import { regex } from '../../../helper/regex';
 
 const AdministratorTambahJurusan = ({ data }) => {
   const [departement, setDepartement] = useState({
@@ -103,7 +104,9 @@ const AdministratorTambahJurusan = ({ data }) => {
                   id="code"
                   placeholder="Kode Jurusan"
                   value={departement.code}
-                  onChange={(event) => setDepartement({ ...departement, code: event.target.value })}
+                  onChange={(event) => {
+                    setDepartement({ ...departement, code: regex.alpha(event.target.value, 5) });
+                  }}
                   error={errors?.code}
                 />
                 {errors && <p className="text-red text-sm">{errors?.code}</p>}

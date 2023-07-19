@@ -15,10 +15,11 @@ export const getAllRepositories = async (
   improvement,
   sort,
   status,
+  year,
   limit,
   page,
 ) => {
-  const url = `${API_URL}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&sort=${sort}&status=${status}&limit=${limit}&page=${page}`;
+  const url = `${API_URL}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&sort=${sort}&status=${status}&year=${year}&limit=${limit}&page=${page}`;
 
   return callAPI({ url, method: 'GET', token: false });
 };
@@ -32,10 +33,11 @@ export const getAuthorRepositories = async (
   improvement,
   status,
   sort,
+  year,
   limit,
   page,
 ) => {
-  const url = `${API_URL}/authors/${pemustaka_id}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&status=${status}&sort=${sort}&limit=${limit}&page=${page}`;
+  const url = `${API_URL}/authors/${pemustaka_id}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&status=${status}&sort=${sort}&year=${year}&limit=${limit}&page=${page}`;
 
   return callAPI({ url, method: 'GET', token: true });
 };
@@ -49,10 +51,11 @@ export const getMentoredRepositories = async (
   improvement,
   status,
   sort,
+  year,
   limit,
   page,
 ) => {
-  const url = `${API_URL}/mentors/${pemustaka_id}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&status=${status}&sort=${sort}&limit=${limit}&page=${page}`;
+  const url = `${API_URL}/mentors/${pemustaka_id}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&status=${status}&sort=${sort}&year=${year}&limit=${limit}&page=${page}`;
 
   return callAPI({ url, method: 'GET', token: true });
 };
@@ -66,10 +69,11 @@ export const getExaminedRepositories = async (
   improvement,
   status,
   sort,
+  year,
   limit,
   page,
 ) => {
-  const url = `${API_URL}/examiners/${pemustaka_id}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&status=${status}&sort=${sort}&limit=${limit}&page=${page}`;
+  const url = `${API_URL}/examiners/${pemustaka_id}/repositories?keyword=${keyword}&collection_id=${collection_id}&category_id=${category_id}&departement_id=${departement_id}&improvement=${improvement}&status=${status}&sort=${sort}&year=${year}&limit=${limit}&page=${page}`;
 
   return callAPI({ url, method: 'GET', token: true });
 };

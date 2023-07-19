@@ -28,6 +28,7 @@ const CardBeranda = (props) => {
         '',
         'created_at DESC',
         'approved',
+        '',
         10,
         currPage,
       );

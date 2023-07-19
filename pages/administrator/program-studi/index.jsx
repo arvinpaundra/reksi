@@ -88,11 +88,12 @@ const AdminsitratorProgramStudi = ({ data }) => {
 
             <Card className="w-full bg-white rounded-lg overflow-hidden">
               <CardBody>
-                <table className="w-full text-black/90 py-2">
+                <table className="w-full text-black/90 py-2 table-auto">
                   <thead className="font-semibold text-center">
                     <tr className="border-b border-gray/30">
                       <td className="py-4">Nama</td>
                       <td className="py-4">Jurusan</td>
+                      <td className="py-4">Warna Cover</td>
                       <td className="py-4">Aksi</td>
                     </tr>
                   </thead>
@@ -111,6 +112,7 @@ const AdminsitratorProgramStudi = ({ data }) => {
                         <tr className="even:bg-blue/5 hover:bg-blue/5" key={item.id}>
                           <td className="py-6">{item.name}</td>
                           <td className="py-6">{item.departement}</td>
+                          <td className="py-6">{item.cover_color}</td>
                           <td className="py-6">
                             <Link href={`/administrator/program-studi/${item.id}/edit`}>
                               <a className="bg-blue/80 rounded-xl px-6 py-2 text-white font-medium hover:bg-blue">

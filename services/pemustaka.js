@@ -11,12 +11,13 @@ export const getAllPemustaka = async (
   keyword,
   role_id,
   departement_id,
+  study_program_id,
   is_collected_final_project,
   year_gen,
   limit,
   page,
 ) => {
-  const url = `${API_URL}/pemustaka?keyword=${keyword}&role_id=${role_id}&departement_id=${departement_id}&is_collected_final_project=${is_collected_final_project}&year_gen=${year_gen}&limit=${limit}&page=${page}`;
+  const url = `${API_URL}/pemustaka?keyword=${keyword}&role_id=${role_id}&departement_id=${departement_id}&study_program_id=${study_program_id}&is_collected_final_project=${is_collected_final_project}&year_gen=${year_gen}&limit=${limit}&page=${page}`;
 
   return callAPI({ url, method: 'GET', token: false });
 };

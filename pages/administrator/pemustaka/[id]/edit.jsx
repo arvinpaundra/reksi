@@ -24,6 +24,7 @@ import { getDetailPemustaka, setUpdateProfilePemustaka } from '../../../../servi
 import { toast } from 'react-toastify';
 import SelectRole from '../../../../components/mollecules/Select/Role';
 import SelectProdi from '../../../../components/mollecules/Select/Prodi';
+import { regex } from '../../../../helper/regex';
 
 const AdministratorEditPemustaka = ({ data }) => {
   const [loading, setLoading] = useState(null);
@@ -55,8 +56,6 @@ const AdministratorEditPemustaka = ({ data }) => {
     is_collected_internship_report: '',
     avatar: 'https://res.cloudinary.com/dxhv9xlwc/image/upload/v1676344916/avatars/avatar.png',
   });
-  const [departement, setDepartement] = useState('');
-  const [studyProgram, setStudyProgram] = useState('');
 
   const router = useRouter();
 
@@ -99,6 +98,12 @@ const AdministratorEditPemustaka = ({ data }) => {
     data.append('is_active', pemustaka.is_active);
     data.append('avatar', avatar);
 
+    for (let entry of data.entries()) {
+      const [key, value] = entry;
+
+      console.log(`${key}: ${value}`);
+    }
+
     try {
       setLoading(true);
 
@@ -129,9 +134,8 @@ const AdministratorEditPemustaka = ({ data }) => {
     setPemustaka({ ...pemustaka, role_id: value, role: label });
   };
 
-  const handleDepartementChange = (data) => {
-    setPemustaka({ ...pemustaka, departement_id: data.value });
-    setDepartement({ id: data.value, name: data.label });
+  const handleDepartementChange = ({ value }) => {
+    setPemustaka({ ...pemustaka, departement_id: value });
   };
 
   const handleProdiChange = ({ value }) => {
@@ -241,9 +245,13 @@ const AdministratorEditPemustaka = ({ data }) => {
                   <Input
                     type="text"
                     placeholder="Nomor Telepon"
+                    error={errors?.telp}
                     value={pemustaka.telp}
-                    onChange={(event) => setPemustaka({ ...pemustaka, telp: event.target.value })}
+                    onChange={(event) =>
+                      setPemustaka({ ...pemustaka, telp: regex.numeric(event.target.value, 13) })
+                    }
                   />
+                  {errors && <p className="text-red text-sm">{errors?.telp}</p>}
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -340,7 +348,10 @@ const AdministratorEditPemustaka = ({ data }) => {
                     }
                     value={pemustaka.identity_number}
                     onChange={(event) =>
-                      setPemustaka({ ...pemustaka, identity_number: event.target.value })
+                      setPemustaka({
+                        ...pemustaka,
+                        identity_number: regex.numeric(event.target.value, 50),
+                      })
                     }
                     error={errors?.identity_number}
                   />
@@ -353,6 +364,10 @@ const AdministratorEditPemustaka = ({ data }) => {
                   <SelectDepartement
                     error={errors?.departement_id}
                     onDepartementChange={handleDepartementChange}
+                    defaultValue={{
+                      value: pemustaka?.departement_id,
+                      label: pemustaka?.departement,
+                    }}
                   />
                   {errors && <p className="text-red text-sm">{errors?.departement_id}</p>}
                 </div>
@@ -375,11 +390,16 @@ const AdministratorEditPemustaka = ({ data }) => {
                     <Input
                       type="text"
                       placeholder="Tahun Angkatan"
+                      error={errors?.year_gen}
                       value={pemustaka.year_gen}
-                      onChange={(event) =>
-                        setPemustaka({ ...pemustaka, year_gen: event.target.value })
-                      }
+                      onChange={(event) => {
+                        setPemustaka({
+                          ...pemustaka,
+                          year_gen: regex.numeric(event.target.value, 4),
+                        });
+                      }}
                     />
+                    {errors && <p className="text-red text-sm">{errors?.year_gen}</p>}
                   </div>
                 )}
                 <div className="flex flex-col gap-1 w-full md:col-span-6">

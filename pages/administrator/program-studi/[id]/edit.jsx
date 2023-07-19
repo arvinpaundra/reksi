@@ -16,12 +16,14 @@ import Head from 'next/head';
 import { toast } from 'react-toastify';
 import { getDetailStudyProgram, setEditStudyProgram } from '../../../../services/study_program';
 import SelectDepartement from '../../../../components/mollecules/Select/Departement';
+import { regex } from '../../../../helper/regex';
 
 const AdministratorEditProgramStudi = ({ data }) => {
   const [prodi, setProdi] = useState({
     name: '',
     departement_id: '',
     departement: '',
+    cover_color: '',
   });
   const [loading, setLoading] = useState(null);
   const [errors, setErrors] = useState({});
@@ -52,6 +54,7 @@ const AdministratorEditProgramStudi = ({ data }) => {
     const data = {
       name: prodi.name,
       departement_id: prodi.departement_id,
+      cover_color: prodi.cover_color,
     };
 
     try {
@@ -127,6 +130,23 @@ const AdministratorEditProgramStudi = ({ data }) => {
                   error={errors?.name}
                 />
                 {errors && <p className="text-red text-sm">{errors?.name}</p>}
+              </div>
+              <div className="flex flex-col gap-1">
+                <label htmlFor="title">
+                  Warna Cover
+                  <ImportantField />
+                </label>
+                <Input
+                  type="text"
+                  id="name"
+                  placeholder="Warna Cover Laporan"
+                  value={prodi.cover_color}
+                  onChange={(event) =>
+                    setProdi({ ...prodi, cover_color: regex.alpha(event.target.value, 50) })
+                  }
+                  error={errors?.cover_color}
+                />
+                {errors && <p className="text-red text-sm">{errors?.cover_color}</p>}
               </div>
             </CardBody>
 

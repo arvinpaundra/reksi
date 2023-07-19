@@ -79,7 +79,7 @@ const CardInternshipReport = (props) => {
         return;
       }
 
-      toast.success('Yeay! Sukses unggah repositori.');
+      toast.success('Yeay! Sukses unggah karya tulis ilmiah.');
       router.push('/mahasiswa/repositori');
     } catch (error) {
     } finally {

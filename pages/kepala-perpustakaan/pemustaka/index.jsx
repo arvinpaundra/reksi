@@ -20,6 +20,7 @@ import { RiArrowDropDownLine } from 'react-icons/ri';
 import SelectDepartement from '../../../components/mollecules/Select/Departement';
 import { ROLE_DOSEN_ID } from '../../../constants';
 import { Input } from '../../../components/atoms/Input';
+import SelectProdi from '../../../components/mollecules/Select/Prodi';
 
 const KepalaPerpustakaanPemustaka = ({ data }) => {
   const [pemustaka, setPemustaka] = useState([]);
@@ -35,6 +36,8 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
   const [keyword, setKeyword] = useState('');
   const [departement, setDepartement] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
+  const [studyProgram, setStudyProgram] = useState('');
+  const [studyProgramFilter, setStudyProgramFilter] = useState('');
   const [isCollectedFinalProject, setIsCollectedFinalProject] = useState('');
   const [isCollectedFinalProjectFilter, setIsCollectedFinalProjectFilter] = useState('Semua');
   const [yearGen, setYearGen] = useState('');
@@ -44,13 +47,23 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
   const [pages, setPages] = useState(0);
 
   const getAllPemustakaAPI = useCallback(
-    async (keyword, role, departement, is_collected_final_project, year_gen, limit, currPage) => {
+    async (
+      keyword,
+      role,
+      departement,
+      study_program_id,
+      is_collected_final_project,
+      year_gen,
+      limit,
+      currPage,
+    ) => {
       try {
         setLoading(true);
         const response = await getAllPemustaka(
           keyword,
           role,
           departement,
+          study_program_id,
           is_collected_final_project,
           year_gen,
           limit,
@@ -74,6 +87,7 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
         keyword,
         selectedRole,
         departement,
+        studyProgram,
         isCollectedFinalProject,
         yearGen,
         limit,
@@ -89,6 +103,7 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
     keyword,
     selectedRole,
     departement,
+    studyProgram,
     isCollectedFinalProject,
     yearGen,
     limit,
@@ -122,6 +137,7 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
     setCurrPage(0);
     setKeyword(query);
     setDepartement(departementFilter);
+    setStudyProgram(studyProgramFilter);
     setIsCollectedFinalProject(
       isCollectedFinalProjectFilter === 'Semua'
         ? ''
@@ -142,6 +158,8 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
     setKeyword('');
     setDepartement('');
     setDepartementFilter('');
+    setStudyProgram('');
+    setStudyProgramFilter('');
     setIsCollectedFinalProject('');
     setIsCollectedFinalProjectFilter('Semua');
     setYearGen('');
@@ -153,6 +171,8 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
     setKeyword('');
     setDepartement('');
     setDepartementFilter('');
+    setStudyProgram('');
+    setStudyProgramFilter('');
     setIsCollectedFinalProject('');
     setIsCollectedFinalProjectFilter('Semua');
     setYearGen('');
@@ -169,6 +189,10 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
 
   const handleDepartementChange = ({ value }) => {
     setDepartementFilter(value);
+  };
+
+  const handleProdiChange = ({ value }) => {
+    setStudyProgramFilter(value === undefined ? '' : value);
   };
 
   return (
@@ -325,6 +349,12 @@ const KepalaPerpustakaanPemustaka = ({ data }) => {
               Jurusan
             </label>
             <SelectDepartement onDepartementChange={handleDepartementChange} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-black" htmlFor="study_program">
+              Program Studi
+            </label>
+            <SelectProdi departement_id={departementFilter} onProdiChange={handleProdiChange} />
           </div>
           {selectedRole !== ROLE_DOSEN_ID && (
             <>

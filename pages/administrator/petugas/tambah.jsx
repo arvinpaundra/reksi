@@ -19,6 +19,7 @@ import { setRegisterStaff } from '../../../services/auth';
 import { Listbox } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { PatternFormat } from 'react-number-format';
+import { regex } from '../../../helper/regex';
 
 const AdministratorTambahPetugas = ({ data }) => {
   const [staff, setStaff] = useState({
@@ -68,7 +69,7 @@ const AdministratorTambahPetugas = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses menambahkan role.');
+      toast.success('Yeay! Sukses menambahkan petugas.');
       setErrors({});
       router.push('/administrator/petugas');
     } catch (error) {
@@ -148,7 +149,9 @@ const AdministratorTambahPetugas = ({ data }) => {
                   id="nip"
                   placeholder="NIP Petugas"
                   value={staff?.nip}
-                  onChange={(event) => setStaff({ ...staff, nip: event.target.value })}
+                  onChange={(event) =>
+                    setStaff({ ...staff, nip: regex.numeric(event.target.value, 18) })
+                  }
                   error={errors?.nip}
                 />
               </div>
@@ -219,7 +222,9 @@ const AdministratorTambahPetugas = ({ data }) => {
                   type="text"
                   placeholder="Nomor Telepon"
                   value={staff?.telp}
-                  onChange={(event) => setStaff({ ...staff, telp: event.target.value })}
+                  onChange={(event) =>
+                    setStaff({ ...staff, telp: regex.numeric(event.target.value, 13) })
+                  }
                 />
               </div>
               <div className="flex flex-col gap-1">

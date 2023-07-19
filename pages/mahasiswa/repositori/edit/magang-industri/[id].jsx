@@ -39,6 +39,7 @@ const EditInternshipReportMahasiswa = ({ data }) => {
     departement: '',
     authors: [],
     contributors: [],
+    mentor_id: '',
     documents: {},
     created_at: '',
     updated_at: '',
@@ -65,7 +66,10 @@ const EditInternshipReportMahasiswa = ({ data }) => {
       setLoading(true);
       const response = await getDetailRepository(repository_id);
 
-      setRepository(response?.data);
+      setRepository({
+        ...response?.data,
+        mentor_id: response?.data?.contributors[0]?.pemustaka_id,
+      });
     } catch (error) {
     } finally {
       setLoading(false);
@@ -85,12 +89,7 @@ const EditInternshipReportMahasiswa = ({ data }) => {
   };
 
   const handleLecturerChange = ({ value }) => {
-    const contributors = [];
-    contributors[0] = {
-      pemustaka_id: value.value,
-      fullname: value.label,
-    };
-    setRepository({ ...repository, contributors: contributors });
+    setRepository({ ...repository, contributors: value });
   };
 
   const handlerSubmit = async () => {
@@ -105,7 +104,7 @@ const EditInternshipReportMahasiswa = ({ data }) => {
     data.append('chp_five', fileBab5);
     data.append('bibliography', fileDapus);
     data.append('author', pemustaka_id || '');
-    data.append('mentor', repository?.contributors[0] || '');
+    data.append('mentor', repository?.mentor_id || '');
     data.append('departement_id', repository?.departement_id || '');
     data.append('category_id', repository?.category_id || '');
     data.append('title', repository?.title);
@@ -127,7 +126,7 @@ const EditInternshipReportMahasiswa = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses edit repositori.');
+      toast.success('Yeay! Sukses edit karya tulis ilmiah.');
       router.push('/mahasiswa/repositori');
     } catch (error) {
     } finally {

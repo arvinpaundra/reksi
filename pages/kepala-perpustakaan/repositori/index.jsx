@@ -48,6 +48,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
+  const [year, setYear] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
@@ -55,6 +56,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
+  const [yearFilter, setYearFilter] = useState('');
   const [sortFilter, setSortFilter] = useState('Terbaru');
 
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
@@ -68,6 +70,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
       improvement,
       sort,
       status,
+      year,
       limit,
       currPage,
     ) => {
@@ -81,6 +84,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
           improvement,
           sort,
           status,
+          year,
           limit,
           currPage,
         );
@@ -106,6 +110,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
         improvement,
         sort,
         status,
+        year,
         limit,
         currPage,
       );
@@ -121,6 +126,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
     improvement,
     sort,
     status,
+    year,
     limit,
     currPage,
     isFetching,
@@ -173,6 +179,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
         : 'denied',
     );
     setSort(sortFilter === 'created_at DESC' ? 'crated_at DESC' : 'created_at ASC');
+    setYear(yearFilter);
 
     setIsOpenDrawer(false);
   };
@@ -185,6 +192,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
     setSortFilter('Terbaru');
+    setYearFilter('');
 
     setQuery('');
     setKeyword('');
@@ -193,6 +201,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
     setDepartement('');
     setImprovement('');
     setStatus('');
+    setYear('');
     setSort('created_at DESC');
   };
 
@@ -376,6 +385,18 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
               Jurusan
             </label>
             <SelectDepartement onDepartementChange={handleDepartementChange} />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Tahun
+            </label>
+            <input
+              type="text"
+              className="flex-grow border border-black/50 rounded-xl py-2 px-4 outline-none focus:border-blue"
+              placeholder="Tahun dibuat"
+              value={yearFilter}
+              onChange={(event) => setYearFilter(event.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">

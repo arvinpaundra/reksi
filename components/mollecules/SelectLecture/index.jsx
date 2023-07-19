@@ -16,7 +16,7 @@ const SelectLecture = (props) => {
   const getLecturersAPI = useCallback(async (keyword) => {
     try {
       setLoading(true);
-      const response = await getAllPemustaka(keyword, ROLE_DOSEN_ID, '', '', '', 5, 0);
+      const response = await getAllPemustaka(keyword, ROLE_DOSEN_ID, '', '', '', '', 5, 0);
 
       setDataLecturers(response?.data);
     } catch (error) {

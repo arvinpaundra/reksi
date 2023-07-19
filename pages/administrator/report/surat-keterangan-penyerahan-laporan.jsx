@@ -53,21 +53,21 @@ const AdministratorSuratKeteranganPenyerahanLaporan = ({ data }) => {
     if (!payloads.pemustaka_id) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        pemustaka_id: 'This field is required',
+        pemustaka_id: 'Wajib diisi',
       }));
     }
 
     if (!payloads.collection_id) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        collection_id: 'This field is required',
+        collection_id: 'Wajib diisi',
       }));
     }
 
     if (!payloads.repository_id) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        repository_id: 'This field is required',
+        repository_id: 'Wajib diisi',
       }));
     }
 

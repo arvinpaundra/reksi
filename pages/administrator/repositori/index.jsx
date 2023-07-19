@@ -49,6 +49,7 @@ const AdministratorRepositori = ({ data }) => {
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
+  const [year, setYear] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
@@ -56,6 +57,7 @@ const AdministratorRepositori = ({ data }) => {
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
+  const [yearFilter, setYearFilter] = useState('');
   const [sortFilter, setSortFilter] = useState('Terbaru');
 
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -75,6 +77,7 @@ const AdministratorRepositori = ({ data }) => {
       improvement,
       sort,
       status,
+      year,
       currPage,
     ) => {
       try {
@@ -87,6 +90,7 @@ const AdministratorRepositori = ({ data }) => {
           improvement,
           sort,
           status,
+          year,
           10,
           currPage,
         );
@@ -112,6 +116,7 @@ const AdministratorRepositori = ({ data }) => {
         improvement,
         sort,
         status,
+        year,
         currPage,
       );
     }
@@ -126,6 +131,7 @@ const AdministratorRepositori = ({ data }) => {
     improvement,
     sort,
     status,
+    year,
     currPage,
     isFetching,
   ]);
@@ -176,6 +182,7 @@ const AdministratorRepositori = ({ data }) => {
         ? 'approved'
         : 'denied',
     );
+    setYear(yearFilter || '');
     setSort(sortFilter === 'created_at DESC' ? 'crated_at DESC' : 'created_at ASC');
 
     setIsOpenDrawer(false);
@@ -188,6 +195,7 @@ const AdministratorRepositori = ({ data }) => {
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
+    setYearFilter('');
     setSortFilter('Terbaru');
 
     setQuery('');
@@ -197,6 +205,7 @@ const AdministratorRepositori = ({ data }) => {
     setDepartement('');
     setImprovement('');
     setStatus('');
+    setYear('');
     setSort('created_at DESC');
   };
 
@@ -426,6 +435,18 @@ const AdministratorRepositori = ({ data }) => {
               Jurusan
             </label>
             <SelectDepartement onDepartementChange={handleDepartementChange} />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Tahun
+            </label>
+            <input
+              type="text"
+              className="flex-grow border border-black/50 rounded-xl py-2 px-4 outline-none focus:border-blue"
+              placeholder="Tahun dibuat"
+              value={yearFilter}
+              onChange={(event) => setYearFilter(event.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">

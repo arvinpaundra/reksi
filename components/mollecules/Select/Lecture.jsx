@@ -16,7 +16,7 @@ const SelectLecture = ({ error, onLectureChange }) => {
   const getLecturersAPI = useCallback(async (keyword) => {
     try {
       setLoading(true);
-      const response = await getAllPemustaka(keyword, ROLE_DOSEN_ID, '', '', '', 5, 0);
+      const response = await getAllPemustaka(keyword, ROLE_DOSEN_ID, '', '', '', '', 5, 0);
 
       const transformedResponses = response?.data?.map((item) => ({
         value: item.id,

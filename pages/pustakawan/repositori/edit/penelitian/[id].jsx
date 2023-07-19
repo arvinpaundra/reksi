@@ -152,7 +152,7 @@ const EditResearchReportMahasiswa = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses edit repositori.');
+      toast.success('Yeay! Sukses edit karya tulis ilmiah.');
       router.push('/pustakawan/repositori');
       setErrors();
     } catch (error) {

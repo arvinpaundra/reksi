@@ -16,9 +16,10 @@ import ImportantField from '../../../../components/atoms/Important';
 import SelectDepartement from '../../../../components/mollecules/Select/Departement';
 import { ButtonFilled } from '../../../../components/atoms/Button';
 import Footer from '../../../../components/organisms/Footer';
-import SelectLecture from '../../../../components/mollecules/SelectLecture';
 import SelectPemustaka from '../../../../components/mollecules/Select/Pemustaka';
 import { setCreateInternshipReport } from '../../../../services/repository';
+import SelectCategory from '../../../../components/mollecules/Select/Category';
+import SelectLecture from '../../../../components/mollecules/Select/Lecture';
 
 const PustakawanMagangIndustri = ({ data }) => {
   const router = useRouter();
@@ -34,6 +35,7 @@ const PustakawanMagangIndustri = ({ data }) => {
     update_desc: '',
   });
 
+  const [category, setCategory] = useState({});
   const [departement, setDepartement] = useState({});
   const [author, setAuthor] = useState({});
   const [mentor, setMentor] = useState({});
@@ -62,6 +64,7 @@ const PustakawanMagangIndustri = ({ data }) => {
     data.append('author', author || '');
     data.append('mentor', mentor?.id || '');
     data.append('departement_id', departement || '');
+    data.append('category_id', category || '');
     data.append('title', repository?.title);
     data.append('date_validated', repository?.date_validated);
 
@@ -89,12 +92,20 @@ const PustakawanMagangIndustri = ({ data }) => {
     }
   };
 
+  const handleCategoryChange = ({ value }) => {
+    setCategory(value);
+  };
+
   const handleAuthorChange = (_, { value }) => {
     setAuthor(value);
   };
 
   const handleDepartementChange = (_, { value }) => {
     setDepartement(value);
+  };
+
+  const handleLecturerChange = ({ value }) => {
+    setMentor(value);
   };
 
   return (
@@ -138,6 +149,17 @@ const PustakawanMagangIndustri = ({ data }) => {
                     {errors && <p className="text-red text-sm">{errors?.title}</p>}
                   </div>
                   <div className="flex flex-col gap-1">
+                    <label htmlFor="category">
+                      Pilih Kategori
+                      <ImportantField />
+                    </label>
+                    <SelectCategory
+                      error={errors?.category_id}
+                      onCategoryChange={handleCategoryChange}
+                    />
+                    {errors && <p className="text-red text-sm">{errors?.category_id}</p>}
+                  </div>
+                  <div className="flex flex-col gap-1">
                     <label htmlFor="departement">
                       Pilih Jurusan
                       <ImportantField />
@@ -164,12 +186,7 @@ const PustakawanMagangIndustri = ({ data }) => {
                       Pilih Pembimbing
                       <ImportantField />
                     </label>
-                    <SelectLecture
-                      lecture={mentor}
-                      setLecture={setMentor}
-                      placeholder="Pilih Pembimbing"
-                      error={errors?.mentor}
-                    />
+                    <SelectLecture onLectureChange={handleLecturerChange} error={errors?.mentor} />
                     {errors && <p className="text-red text-sm">{errors?.mentor}</p>}
                   </div>
                   <div className="flex flex-col gap-1">

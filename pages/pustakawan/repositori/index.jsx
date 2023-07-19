@@ -49,6 +49,7 @@ const PustakawanRepositori = ({ data }) => {
   const [departement, setDepartement] = useState('');
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
+  const [year, setYear] = useState('');
   const [sort, setSort] = useState('created_at DESC');
 
   const [collectionFilter, setCollectionFilter] = useState('');
@@ -56,6 +57,7 @@ const PustakawanRepositori = ({ data }) => {
   const [departementFilter, setDepartementFilter] = useState('');
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
+  const [yearFilter, setYearFilter] = useState('');
   const [sortFilter, setSortFilter] = useState('Terbaru');
 
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -75,6 +77,7 @@ const PustakawanRepositori = ({ data }) => {
       improvement,
       sort,
       status,
+      year,
       limit,
       currPage,
     ) => {
@@ -88,6 +91,7 @@ const PustakawanRepositori = ({ data }) => {
           improvement,
           sort,
           status,
+          year,
           limit,
           currPage,
         );
@@ -113,6 +117,7 @@ const PustakawanRepositori = ({ data }) => {
         improvement,
         sort,
         status,
+        year,
         limit,
         currPage,
       );
@@ -128,6 +133,7 @@ const PustakawanRepositori = ({ data }) => {
     improvement,
     sort,
     status,
+    year,
     limit,
     currPage,
     isFetching,
@@ -180,6 +186,7 @@ const PustakawanRepositori = ({ data }) => {
         : 'denied',
     );
     setSort(sortFilter === 'created_at DESC' ? 'crated_at DESC' : 'created_at ASC');
+    setYear(yearFilter);
 
     setIsOpenDrawer(false);
   };
@@ -192,6 +199,7 @@ const PustakawanRepositori = ({ data }) => {
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
     setSortFilter('Terbaru');
+    setYearFilter('');
 
     setQuery('');
     setKeyword('');
@@ -200,6 +208,7 @@ const PustakawanRepositori = ({ data }) => {
     setDepartement('');
     setImprovement('');
     setStatus('');
+    setYear('');
     setSort('created_at DESC');
   };
 
@@ -429,6 +438,18 @@ const PustakawanRepositori = ({ data }) => {
               Jurusan
             </label>
             <SelectDepartement onDepartementChange={handleDepartementChange} />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Tahun
+            </label>
+            <input
+              type="text"
+              className="flex-grow border border-black/50 rounded-xl py-2 px-4 outline-none focus:border-blue"
+              placeholder="Tahun dibuat"
+              value={yearFilter}
+              onChange={(event) => setYearFilter(event.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">

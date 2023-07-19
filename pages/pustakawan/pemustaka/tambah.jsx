@@ -40,7 +40,7 @@ const PustakawanTambahPemustaka = ({ data }) => {
     birth_date: '',
     address: '',
     year_gen: '',
-    is_active: '',
+    is_active: '0',
     is_collected_final_project: '0',
     is_collected_internship_report: '0',
   });
@@ -86,7 +86,7 @@ const PustakawanTambahPemustaka = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses menambahkan role.');
+      toast.success('Yeay! Sukses menambahkan pemustaka.');
       setErrors({});
       router.push('/pustakawan/pemustaka');
     } catch (error) {

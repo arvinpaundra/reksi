@@ -35,7 +35,7 @@ const CardResearchReport = (props) => {
   const [collection, setCollection] = useState('');
   const [departement, setDepartement] = useState('');
   const [category, setCategory] = useState('');
-  const [authors, setAuthors] = useState([]);
+  const [authors, setAuthors] = useState([user?.id]);
   const [fileValidityPage, setFileValidityPage] = useState(null);
   const [fileCoverAndListContent, setCoverAndListContent] = useState(null);
   const [fileBab1, setFileBab1] = useState(null);
@@ -83,7 +83,7 @@ const CardResearchReport = (props) => {
         return;
       }
 
-      toast.success('Yeay! Sukses unggah repositori.');
+      toast.success('Yeay! Sukses unggah karya tulis ilmiah.');
       if (user?.role === 'Dosen') {
         router.push('/dosen/repositori/dibuat');
       } else if (user?.role === 'Mahasiswa') {
@@ -197,12 +197,12 @@ const CardResearchReport = (props) => {
                 <div className="flex flex-col gap-3 w-full">
                   {authors.map((_, i) => (
                     <div key={i} className="flex items-center gap-2 w-full">
-                      <SelectPemustaka index={i} onPemustakaChange={handlePemustakaChange} />
+                      <SelectPemustaka index={i + 1} onPemustakaChange={handlePemustakaChange} />
 
                       {i > 0 && (
                         <button
                           className="p-4 text-red hover:bg-red/10 rounded-full"
-                          onClick={() => removeSelectPemustaka(i)}
+                          onClick={() => removeSelectPemustaka(i + 1)}
                         >
                           <BsFillTrashFill size={17} />
                         </button>

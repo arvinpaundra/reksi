@@ -11,6 +11,7 @@ import { getDetailPemustaka } from '../../../services/pemustaka';
 import Card from '../../atoms/Card';
 import CardBody from '../../atoms/Card/CardBody';
 import Divider from '../../atoms/Divider';
+import { HiDocumentText } from 'react-icons/hi';
 
 const Sidebar = (props) => {
   const { data, role } = props;
@@ -96,6 +97,21 @@ const Sidebar = (props) => {
                   <p className="text-sm 2xl:text-base font-normal">Repositori</p>
                 </div>
 
+                <Divider />
+              </a>
+            </Link>
+            <Link
+              href={
+                role === 'dosen'
+                  ? '/dosen/surat-keterangan-penyerahan-laporan'
+                  : '/mahasiswa/surat-keterangan-penyerahan-laporan'
+              }
+            >
+              <a className="hover:bg-blue/5">
+                <div className="flex items-center gap-3 p-4">
+                  <HiDocumentText size={26} />
+                  <p className="text-sm 2xl:text-base font-normal">Cetak Surat Keterangan</p>
+                </div>
                 <Divider />
               </a>
             </Link>

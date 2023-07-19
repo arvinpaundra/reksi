@@ -1,37 +1,33 @@
-import jwtDecode from 'jwt-decode';
-import Footer from '../../../components/organisms/Footer';
+import Cookies from 'js-cookie';
+import { useState } from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
 import CardFooter from '../../../components/atoms/Card/CardFooter';
 import Divider from '../../../components/atoms/Divider';
+import Footer from '../../../components/organisms/Footer';
+import SelectCollection from '../../../components/mollecules/Select/Collection';
 import ImportantField from '../../../components/atoms/Important';
-import CardBody from '../../../components/atoms/Card/CardBody';
+import SelectRepository from '../../../components/mollecules/Select/Repository';
 import CardHeader from '../../../components/atoms/Card/CardHeader';
+import CardBody from '../../../components/atoms/Card/CardBody';
 import Card from '../../../components/atoms/Card';
-import SidebarStaff from '../../../components/organisms/Sidebar/SidebarStaff';
 import Navbar from '../../../components/organisms/Navbar';
 import Head from 'next/head';
-import SelectPemustaka from '../../../components/mollecules/Select/Pemustaka';
-import { useState } from 'react';
-import SelectCollection from '../../../components/mollecules/Select/Collection';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { toast } from 'react-toastify';
+import Sidebar from '../../../components/organisms/Sidebar';
+import jwtDecode from 'jwt-decode';
 import { API_URL } from '../../../constants';
-import { AiOutlinePrinter } from 'react-icons/ai';
-import SelectRepository from '../../../components/mollecules/Select/Repository';
+import axios from 'axios';
 
-const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
+const SuratKetaranganPenyerahanLaporanMahasiswa = (props) => {
+  const { data } = props;
+
   const [payloads, setPayloads] = useState({
-    pemustaka_id: '',
+    pemustaka_id: data?.id,
     collection_id: '',
     repository_id: '',
   });
   const [loading, setLoading] = useState(null);
   const [buttonLoading, setButtonLoading] = useState(null);
   const [errors, setErrors] = useState({});
-
-  const handlePemustakaChange = (_, { value }) => {
-    setPayloads({ ...payloads, pemustaka_id: value });
-  };
 
   const handleCollectionChange = ({ value }) => {
     setPayloads({
@@ -48,7 +44,7 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
   };
 
   const handlePrint = async () => {
-    setErrors(null);
+    setErrors({});
 
     if (!payloads.pemustaka_id) {
       setErrors((prevErrors) => ({
@@ -71,7 +67,7 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
       }));
     }
 
-    if (Object.keys(errors).length !== 0) {
+    if (Object?.keys(errors).length !== 0) {
       return;
     }
 
@@ -139,7 +135,7 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
         <Navbar active="akunku" />
 
         <main className="px-4 md:px-12 lg:px-24 mt-6 mb-20 lg:my-6 2xl:px-[15%] xl:grid xl:grid-cols-12 xl:gap-4">
-          <SidebarStaff data={data} role="pustakawan" />
+          <Sidebar data={data} role="mahasiswa" />
 
           <Card className="w-full bg-white rounded-lg overflow-hidden h-fit xl:col-span-9">
             <CardHeader className="w-full border-l-4 border-grayish-blue bg-pastel-grey p-4 bg-lynch">
@@ -147,18 +143,6 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
             </CardHeader>
 
             <CardBody className="p-4 md:p-6 flex flex-col gap-6">
-              <div className="flex flex-col gap-1">
-                <label htmlFor="title">
-                  Pilih Pemustaka
-                  <ImportantField />
-                </label>
-                <SelectPemustaka
-                  error={errors?.pemustaka_id}
-                  onPemustakaChange={handlePemustakaChange}
-                />
-                {errors && <p className="text-red text-sm">{errors?.pemustaka_id}</p>}
-              </div>
-
               <div className="flex flex-col gap-1">
                 <label htmlFor="title">
                   Pilih Koleksi
@@ -217,7 +201,7 @@ const PustakawanSuratKeteranganPenyerahanLaporan = ({ data }) => {
   );
 };
 
-export default PustakawanSuratKeteranganPenyerahanLaporan;
+export default SuratKetaranganPenyerahanLaporanMahasiswa;
 
 export function getServerSideProps({ req }) {
   const { token } = req.cookies;
@@ -225,7 +209,7 @@ export function getServerSideProps({ req }) {
   if (!token) {
     return {
       redirect: {
-        destination: '/auth/petugas/masuk',
+        destination: '/auth/masuk',
         permanent: false,
       },
     };
@@ -234,10 +218,10 @@ export function getServerSideProps({ req }) {
   const payloads = jwtDecode(token);
   payloads.authenticated = true;
 
-  if (payloads?.role === 'Mahasiswa') {
+  if (payloads?.role === 'Administrator') {
     return {
       redirect: {
-        destination: '/mahasiswa/profil',
+        destination: '/administrator/dashboard',
         permanent: false,
       },
     };
@@ -248,10 +232,10 @@ export function getServerSideProps({ req }) {
         permanent: false,
       },
     };
-  } else if (payloads?.role === 'Administrator') {
+  } else if (payloads?.role === 'Pustakawan') {
     return {
       redirect: {
-        destination: '/administrator/dashboard',
+        destination: '/pustakawan/dashboard',
         permanent: false,
       },
     };

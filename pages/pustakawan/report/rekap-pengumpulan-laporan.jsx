@@ -75,7 +75,7 @@ const PustakawanPengumpulanLaporan = ({ data }) => {
   const handlePrint = async () => {
     if (collection === '' || collection === undefined) {
       setErrors({
-        collection_id: 'This field is required',
+        collection_id: 'Wajib diisi',
       });
       return;
     }

@@ -44,6 +44,7 @@ const RepositoriDosen = (props) => {
   const [improvement, setImprovement] = useState('');
   const [status, setStatus] = useState('');
   const [sort, setSort] = useState('created_at DESC');
+  const [year, setYear] = useState('');
 
   const [collectionFilter, setCollectionFilter] = useState('');
   const [departementFilter, setDepartementFilter] = useState('');
@@ -51,6 +52,7 @@ const RepositoriDosen = (props) => {
   const [improvementFilter, setImprovementFilter] = useState('Semua');
   const [statusFilter, setStatusFilter] = useState('Semua');
   const [sortFilter, setSortFilter] = useState('Terbaru');
+  const [yearFilter, setYearFilter] = useState('');
   const [isFetching, setIsFetching] = useState(true);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -71,6 +73,7 @@ const RepositoriDosen = (props) => {
       improvement,
       status,
       sort,
+      year,
       limit,
       page,
     ) => {
@@ -86,6 +89,7 @@ const RepositoriDosen = (props) => {
           improvement,
           status,
           sort,
+          year,
           limit,
           page,
         );
@@ -120,10 +124,13 @@ const RepositoriDosen = (props) => {
         improvement,
         status,
         sort,
+        year,
         limit,
         currPage,
       );
     }
+
+    setIsFetching(false);
   }, [
     getAuthorRepositoriesAPI,
     keyword,
@@ -133,6 +140,7 @@ const RepositoriDosen = (props) => {
     improvement,
     status,
     sort,
+    year,
     limit,
     currPage,
     isFetching,
@@ -148,6 +156,7 @@ const RepositoriDosen = (props) => {
 
   const handlerFilter = (event) => {
     event.preventDefault();
+    setIsFetching(true);
 
     setCurrPage(0);
     setKeyword(query);
@@ -167,17 +176,20 @@ const RepositoriDosen = (props) => {
         : 'denied',
     );
     setSort(sortFilter === 'created_at DESC' ? 'crated_at DESC' : 'created_at ASC');
+    setYear(yearFilter);
 
     setIsOpenDrawer(false);
   };
 
   const handlerClearFilter = () => {
+    setIsFetching(true);
     setCollectionFilter('');
     setCategoryFilter('');
     setDepartementFilter('');
     setImprovementFilter('Semua');
     setStatusFilter('Semua');
     setSortFilter('Terbaru');
+    setYearFilter('');
 
     setQuery('');
     setKeyword('');
@@ -187,6 +199,7 @@ const RepositoriDosen = (props) => {
     setImprovement('');
     setStatus('');
     setSort('created_at DESC');
+    setYear('');
   };
 
   const handleCollectionChange = ({ value }) => {
@@ -400,6 +413,18 @@ const RepositoriDosen = (props) => {
               Jurusan
             </label>
             <SelectDepartement onDepartementChange={handleDepartementChange} />
+          </div>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="collection" className="text-black/90">
+              Tahun
+            </label>
+            <input
+              type="text"
+              className="flex-grow border border-black/50 rounded-xl py-2 px-4 outline-none focus:border-blue"
+              placeholder="Tahun dibuat"
+              value={yearFilter}
+              onChange={(event) => setYearFilter(event.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="collection" className="text-black/90">

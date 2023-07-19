@@ -21,6 +21,7 @@ import { PatternFormat } from 'react-number-format';
 import { Listbox } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
+import { regex } from '../../../../helper/regex';
 
 const AdministratorEditPetugas = ({ data }) => {
   const [staff, setStaff] = useState({
@@ -210,7 +211,9 @@ const AdministratorEditPetugas = ({ data }) => {
                   id="nip"
                   placeholder="Email Petugas"
                   value={staff.nip}
-                  onChange={(event) => setStaff({ ...staff, nip: event.target.value })}
+                  onChange={(event) =>
+                    setStaff({ ...staff, nip: regex.numeric(event.target.value, 18) })
+                  }
                   error={errors?.nip}
                 />
               </div>
@@ -224,7 +227,9 @@ const AdministratorEditPetugas = ({ data }) => {
                   id="telp"
                   placeholder="No. Telepon"
                   value={staff.telp}
-                  onChange={(event) => setStaff({ ...staff, telp: event.target.value })}
+                  onChange={(event) =>
+                    setStaff({ ...staff, telp: regex.numeric(event.target.value, 13) })
+                  }
                   error={errors?.telp}
                 />
                 {errors && <p className="text-red text-sm">{errors?.telp}</p>}

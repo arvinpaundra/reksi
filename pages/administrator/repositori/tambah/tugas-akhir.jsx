@@ -13,12 +13,13 @@ import Divider from '../../../../components/atoms/Divider';
 import ImportantField from '../../../../components/atoms/Important';
 import { Input, InputFile } from '../../../../components/atoms/Input';
 import { PatternFormat } from 'react-number-format';
-import SelectLecture from '../../../../components/mollecules/SelectLecture';
 import SelectDepartement from '../../../../components/mollecules/Select/Departement';
 import CardBody from '../../../../components/atoms/Card/CardBody';
 import CardHeader from '../../../../components/atoms/Card/CardHeader';
 import Card from '../../../../components/atoms/Card';
 import SelectPemustaka from '../../../../components/mollecules/Select/Pemustaka';
+import SelectLecture from '../../../../components/mollecules/Select/Lecture';
+import SelectCategory from '../../../../components/mollecules/Select/Category';
 
 const AdministratorTugasAkhir = ({ data }) => {
   const router = useRouter();
@@ -35,6 +36,7 @@ const AdministratorTugasAkhir = ({ data }) => {
     update_desc: '',
   });
 
+  const [category, setCategory] = useState({});
   const [departement, setDepartement] = useState({});
   const [author, setAuthor] = useState({});
   const [firstMentor, setFirstMentor] = useState({});
@@ -66,6 +68,7 @@ const AdministratorTugasAkhir = ({ data }) => {
     data.append('chp_four', fileBab4);
     data.append('chp_five', fileBab5);
     data.append('bibliography', fileDapus);
+    data.append('category_id', category || '');
     data.append('departement_id', departement || '');
     data.append('author', author || '');
     data.append('first_examiner', firstExaminer?.id || '');
@@ -103,12 +106,32 @@ const AdministratorTugasAkhir = ({ data }) => {
     }
   };
 
+  const handleCategoryChange = ({ value }) => {
+    setCategory(value);
+  };
+
   const handleAuthorChange = (_, { value }) => {
     setAuthor(value);
   };
 
   const handleDepartementChange = ({ value }) => {
     setDepartement(value);
+  };
+
+  const handleFirstMentorChange = ({ value }) => {
+    setFirstMentor(value);
+  };
+
+  const handleSecondMentorChange = ({ value }) => {
+    setSecondMentor(value);
+  };
+
+  const handleFirstExaminerChange = ({ value }) => {
+    setFirstExaminer(value);
+  };
+
+  const handleSecondExaminerChange = ({ value }) => {
+    setSecondExaminer(value);
   };
 
   return (
@@ -152,6 +175,17 @@ const AdministratorTugasAkhir = ({ data }) => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <label htmlFor="category">
+                    Pilih Kategori
+                    <ImportantField />
+                  </label>
+                  <SelectCategory
+                    error={errors?.category_id}
+                    onCategoryChange={handleCategoryChange}
+                  />
+                  {errors && <p className="text-red text-sm">{errors?.category_id}</p>}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="category">
                     Pilih Jurusan
                     <ImportantField />
                   </label>
@@ -175,9 +209,7 @@ const AdministratorTugasAkhir = ({ data }) => {
                     <ImportantField />
                   </label>
                   <SelectLecture
-                    lecture={firstMentor}
-                    setLecture={setFirstMentor}
-                    placeholder="Pilih Pembimbing 1"
+                    onLectureChange={handleFirstMentorChange}
                     error={errors?.first_mentor}
                   />
                   {errors && <p className="text-red text-sm">{errors?.first_mentor}</p>}
@@ -188,9 +220,7 @@ const AdministratorTugasAkhir = ({ data }) => {
                     <ImportantField />
                   </label>
                   <SelectLecture
-                    lecture={secondMentor}
-                    setLecture={setSecondMentor}
-                    placeholder="Pilih Pembimbing 2"
+                    onLectureChange={handleSecondMentorChange}
                     error={errors?.second_mentor}
                   />
                   {errors && <p className="text-red text-sm">{errors?.second_mentor}</p>}
@@ -201,9 +231,7 @@ const AdministratorTugasAkhir = ({ data }) => {
                     <ImportantField />
                   </label>
                   <SelectLecture
-                    lecture={firstExaminer}
-                    setLecture={setFirstExaminer}
-                    placeholder="Pilih Penguji 1"
+                    onLectureChange={handleFirstExaminerChange}
                     error={errors?.first_examiner}
                   />
                   {errors && <p className="text-red text-sm">{errors?.first_examiner}</p>}
@@ -214,9 +242,7 @@ const AdministratorTugasAkhir = ({ data }) => {
                     <ImportantField />
                   </label>
                   <SelectLecture
-                    lecture={secondExaminer}
-                    setLecture={setSecondExaminer}
-                    placeholder="Pilih Penguji 2"
+                    onLectureChange={handleSecondExaminerChange}
                     error={errors?.second_examiner}
                   />
                   {errors && <p className="text-red text-sm">{errors?.second_examiner}</p>}

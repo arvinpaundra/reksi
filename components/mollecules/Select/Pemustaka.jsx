@@ -17,7 +17,7 @@ const SelectPemustaka = ({ index, onPemustakaChange, error }) => {
   const getAllPemustakaAPI = useCallback(async (keyword) => {
     try {
       setLoading(true);
-      const response = await getAllPemustaka(keyword, '', '', '', '', 5, 0);
+      const response = await getAllPemustaka(keyword, '', '', '', '', '', 5, 0);
 
       const transformedResponses = response?.data?.map((item) => ({
         value: item.id,

@@ -126,6 +126,7 @@ const AdminsitratorRequestAccess = ({ data }) => {
       toast.success('Yeay! Sukses tolak pemustaka.');
       setOpenModalDenied(false);
       setReasons('');
+      window.location.reload();
     } catch (error) {
     } finally {
       setLoading(false);
@@ -512,6 +513,7 @@ const DetailModal = ({ request_id, open, handleOpen, handleOpenDeniedModal }) =>
 
       toast.success('Yeay! Sukses terima pemustaka.');
       handleOpen(false);
+      window.location.reload();
     } catch (error) {
     } finally {
       setLoading(false);

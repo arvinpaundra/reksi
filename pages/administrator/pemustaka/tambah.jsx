@@ -23,6 +23,7 @@ import SelectProdi from '../../../components/mollecules/Select/Prodi';
 import { PatternFormat } from 'react-number-format';
 import SelectRole from '../../../components/mollecules/Select/Role';
 import { setCreatePemustaka } from '../../../services/pemustaka';
+import { regex } from '../../../helper/regex';
 
 const AdministratorTambahPemustaka = ({ data }) => {
   const [pemustaka, setPemustaka] = useState({
@@ -41,7 +42,6 @@ const AdministratorTambahPemustaka = ({ data }) => {
     birth_date: '',
     address: '',
     year_gen: '',
-    is_active: '',
     is_collected_final_project: '0',
     is_collected_internship_report: '0',
   });
@@ -87,7 +87,7 @@ const AdministratorTambahPemustaka = ({ data }) => {
         return;
       }
 
-      toast.success('Yeay! Sukses menambahkan role.');
+      toast.success('Yeay! Sukses menambahkan pemustaka.');
       setErrors({});
       router.push('/administrator/pemustaka');
     } catch (error) {
@@ -177,9 +177,13 @@ const AdministratorTambahPemustaka = ({ data }) => {
                   <Input
                     type="text"
                     placeholder="Nomor Telepon"
+                    error={errors?.telp}
                     value={pemustaka.telp}
-                    onChange={(event) => setPemustaka({ ...pemustaka, telp: event.target.value })}
+                    onChange={(event) => {
+                      setPemustaka({ ...pemustaka, telp: regex.numeric(event.target.value, 13) });
+                    }}
                   />
+                  {errors && <p className="text-red text-sm">{errors?.telp}</p>}
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -275,9 +279,12 @@ const AdministratorTambahPemustaka = ({ data }) => {
                         : 'Nomor Induk Dosen Nasional'
                     }
                     value={pemustaka.identity_number}
-                    onChange={(event) =>
-                      setPemustaka({ ...pemustaka, identity_number: event.target.value })
-                    }
+                    onChange={(event) => {
+                      setPemustaka({
+                        ...pemustaka,
+                        identity_number: regex.numeric(event.target.value, 50),
+                      });
+                    }}
                     error={errors?.identity_number}
                   />
                   {errors && <p className="text-red text-sm">{errors?.identity_number}</p>}
@@ -311,11 +318,16 @@ const AdministratorTambahPemustaka = ({ data }) => {
                     <Input
                       type="text"
                       placeholder="Tahun Angkatan"
+                      error={errors?.year_gen}
                       value={pemustaka.year_gen}
-                      onChange={(event) =>
-                        setPemustaka({ ...pemustaka, year_gen: event.target.value })
-                      }
+                      onChange={(event) => {
+                        setPemustaka({
+                          ...pemustaka,
+                          year_gen: regex.numeric(event.target?.value, 4),
+                        });
+                      }}
                     />
+                    {errors && <p className="text-red text-sm">{errors?.year_gen}</p>}
                   </div>
                 )}
                 <div className="flex flex-col gap-1 w-full md:col-span-6">
