@@ -112,6 +112,7 @@ const AdministratorEditProgramStudi = ({ data }) => {
                 <SelectDepartement
                   error={errors?.departement_id}
                   onDepartementChange={handleDepartementChange}
+                  defaultValue={prodi?.departement}
                 />
                 {errors && <p className="text-red text-sm">{errors?.departement_id}</p>}
               </div>

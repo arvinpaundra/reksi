@@ -11,7 +11,6 @@ import CardHeader from '../../components/atoms/Card/CardHeader';
 import CardBody from '../../components/atoms/Card/CardBody';
 import ImportantField from '../../components/atoms/Important';
 import { Input } from '../../components/atoms/Input';
-import { PatternFormat } from 'react-number-format';
 import { Listbox } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
@@ -21,9 +20,11 @@ import { ButtonFilled } from '../../components/atoms/Button';
 import { toast } from 'react-toastify';
 import { FormatDateIntl } from '../../helper/format_date_intl';
 import { regex } from '../../helper/regex';
+import { useFetchUser } from '../../contexts/FetchUserContext';
 
 const PustakawanProfil = ({ data }) => {
-  const [isFetching, setIsFetching] = useState(true);
+  const { isFetching, updateFetchStatus } = useFetchUser();
+
   const [enableEdit, setEnableEdit] = useState(false);
   const [loading, setLoading] = useState(null);
   const [errors, setErrors] = useState({});
@@ -64,11 +65,10 @@ const PustakawanProfil = ({ data }) => {
       getDetailStaffAPI(staff_id);
     }
 
-    setIsFetching(false);
-  }, [getDetailStaffAPI, staff_id, isFetching]);
+    updateFetchStatus(false);
+  }, [getDetailStaffAPI, staff_id, isFetching, updateFetchStatus]);
 
   const handleUpdateProfile = async (event) => {
-    setIsFetching(true);
     event.preventDefault();
 
     const data = new FormData();
@@ -85,6 +85,7 @@ const PustakawanProfil = ({ data }) => {
 
     try {
       setLoading(true);
+      updateFetchStatus(true);
 
       const response = await setUpdateStaff(staff_id, data);
 
@@ -260,17 +261,11 @@ const PustakawanProfil = ({ data }) => {
                       Tanggal Lahir
                     </label>
                     {enableEdit ? (
-                      <PatternFormat
+                      <Input
+                        type="date"
+                        id="date_validated"
                         value={staff.birth_date}
-                        format="##-##-####"
-                        placeholder="hh-bb-tttt"
-                        displayType="input"
-                        type="text"
-                        onValueChange={(values, sourceInfo) =>
-                          setStaff({ ...staff, birth_date: values.formattedValue })
-                        }
-                        mask=" "
-                        customInput={Input}
+                        onChange={(event) => setStaff({ ...staff, birth_date: event.target.value })}
                       />
                     ) : (
                       <p>
@@ -369,7 +364,10 @@ const PustakawanProfil = ({ data }) => {
                   <>
                     <button
                       className="p-2 w-40 lg:w-40 2xl:w-48 text-black font-medium rounded-xl border border-black bg-transparent hover:bg-black/5"
-                      onClick={() => setEnableEdit(false)}
+                      onClick={() => {
+                        setEnableEdit(false);
+                        updateFetchStatus(true);
+                      }}
                     >
                       Batal
                     </button>

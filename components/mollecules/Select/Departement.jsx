@@ -4,8 +4,9 @@ import { getAllDepartements } from '../../../services/departement';
 import DropdownIndicator from '../../atoms/DropdownIndicator';
 import Select from 'react-select';
 
-const SelectDepartement = ({ onDepartementChange, error }) => {
-  const [loading, setLoading] = useState(null);
+const SelectDepartement = ({ onDepartementChange, error, defaultValue = null }) => {
+  const [loading, setLoading] = useState(false);
+  const [loadingDefault, setLoadingDefault] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState();
   const [departements, setDepartements] = useState([]);
@@ -31,9 +32,32 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
     }
   }, []);
 
+  const getDefaultValue = useCallback(async (defaultValue) => {
+    try {
+      setLoadingDefault(true);
+
+      const defaultDepartement = await getAllDepartements(defaultValue, 1, 0);
+      const defaultLabelDepartement = defaultDepartement?.data?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+
+      setSelectedOption(defaultLabelDepartement);
+    } catch (error) {
+    } finally {
+      setLoadingDefault(false);
+    }
+  }, []);
+
   useEffect(() => {
     getAllDepartementsAPI(departementDeb);
   }, [getAllDepartementsAPI, departementDeb]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      getDefaultValue(defaultValue);
+    }
+  }, [getDefaultValue, defaultValue]);
 
   useEffect(() => {
     if (document.body !== 'undefined') {
@@ -91,7 +115,7 @@ const SelectDepartement = ({ onDepartementChange, error }) => {
       value={selectedOption}
       onChange={handleDepartementChange}
       menuPortalTarget={menuPortalTarget}
-      isLoading={loading}
+      isLoading={loading || loadingDefault}
       loadingMessage={() => 'Memuat . . .'}
       isClearable
     />

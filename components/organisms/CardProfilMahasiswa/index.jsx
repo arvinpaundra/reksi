@@ -11,19 +11,20 @@ import CardHeader from '../../atoms/Card/CardHeader';
 import Divider from '../../atoms/Divider';
 import { Input } from '../../atoms/Input';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
-import { PatternFormat } from 'react-number-format';
 import ImportantField from '../../atoms/Important';
-import SelectProdi from '../../mollecules/SelectProdi';
-import SelectDepartement from '../../mollecules/SelectDepartement';
 import { toast } from 'react-toastify';
 import { FormatDateIntl } from '../../../helper/format_date_intl';
 import { regex } from '../../../helper/regex';
+import SelectDepartement from '../../mollecules/Select/Departement';
+import SelectProdi from '../../mollecules/Select/Prodi';
+import { useFetchUser } from '../../../contexts/FetchUserContext';
 
 const CardProfilMahasiswa = (props) => {
   const { data } = props;
 
+  const { isFetching, updateFetchStatus } = useFetchUser();
+
   const [enableEdit, setEnableEdit] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
   const [loading, setLoading] = useState(null);
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState(null);
@@ -53,11 +54,6 @@ const CardProfilMahasiswa = (props) => {
     is_collected_internship_report: '',
     avatar: 'https://res.cloudinary.com/dxhv9xlwc/image/upload/v1676344916/avatars/avatar.png',
   });
-  const [departement, setDepartement] = useState({
-    id: '',
-    name: '',
-  });
-  const [studyProgram, setStudyProgram] = useState('');
 
   const getDetailPemustakaAPI = useCallback(async (pemustaka_id) => {
     try {
@@ -78,16 +74,16 @@ const CardProfilMahasiswa = (props) => {
       getDetailPemustakaAPI(pemustaka_id);
     }
 
-    setIsFetching(false);
-  }, [getDetailPemustakaAPI, pemustaka_id, isFetching]);
+    updateFetchStatus(false);
+  }, [getDetailPemustakaAPI, pemustaka_id, isFetching, updateFetchStatus]);
 
   const handleUpdateProfile = async (event) => {
     event.preventDefault();
 
     const data = new FormData();
 
-    data.append('departement_id', departement?.id || '');
-    data.append('study_program_id', studyProgram || '');
+    data.append('departement_id', pemustaka?.departement_id || '');
+    data.append('study_program_id', pemustaka?.study_program_id || '');
     data.append('fullname', pemustaka?.fullname || '');
     data.append('identity_number', pemustaka?.identity_number || '');
     data.append('year_gen', pemustaka?.year_gen || '');
@@ -104,6 +100,7 @@ const CardProfilMahasiswa = (props) => {
 
     try {
       setLoading(true);
+      updateFetchStatus(true);
 
       const response = await setUpdateProfilePemustaka(pemustaka_id, data);
 
@@ -125,8 +122,15 @@ const CardProfilMahasiswa = (props) => {
     } catch (error) {
     } finally {
       setLoading(false);
-      setIsFetching(true);
     }
+  };
+
+  const handleDepartementChange = (data) => {
+    setPemustaka({ ...pemustaka, departement_id: data.value });
+  };
+
+  const handleProdiChange = ({ value }) => {
+    setPemustaka({ ...pemustaka, study_program_id: value });
   };
 
   return (
@@ -247,17 +251,13 @@ const CardProfilMahasiswa = (props) => {
                 Tanggal Lahir
               </label>
               {enableEdit ? (
-                <PatternFormat
+                <Input
+                  type="date"
+                  id="date_validated"
                   value={pemustaka.birth_date}
-                  format="##-##-####"
-                  placeholder="hh-bb-tttt"
-                  displayType="input"
-                  type="text"
-                  onValueChange={(values, sourceInfo) =>
-                    setPemustaka({ ...pemustaka, birth_date: values.formattedValue })
+                  onChange={(event) =>
+                    setPemustaka({ ...pemustaka, birth_date: event.target.value })
                   }
-                  mask=" "
-                  customInput={Input}
                 />
               ) : (
                 <p>
@@ -396,8 +396,8 @@ const CardProfilMahasiswa = (props) => {
               <>
                 <SelectDepartement
                   error={errors?.departement_id}
-                  departement={departement}
-                  setDepartement={setDepartement}
+                  onDepartementChange={handleDepartementChange}
+                  defaultValue={pemustaka?.departement}
                 />
                 {errors && <p className="text-red text-sm">{errors?.departement_id}</p>}
               </>
@@ -416,9 +416,9 @@ const CardProfilMahasiswa = (props) => {
               <>
                 <SelectProdi
                   error={errors?.study_program_id}
-                  studyProgram={studyProgram}
-                  setStudyProgram={setStudyProgram}
-                  departement={departement}
+                  departement_id={pemustaka?.departement_id}
+                  onProdiChange={handleProdiChange}
+                  defaultValue={pemustaka?.study_program}
                 />
                 {errors && <p className="text-red text-sm">{errors?.study_program_id}</p>}
               </>
@@ -481,7 +481,10 @@ const CardProfilMahasiswa = (props) => {
             <>
               <button
                 className="p-2 w-40 lg:w-40 2xl:w-48 text-black font-medium rounded-xl border border-black bg-transparent hover:bg-black/5"
-                onClick={() => setEnableEdit(false)}
+                onClick={() => {
+                  setEnableEdit(false);
+                  updateFetchStatus(true);
+                }}
               >
                 Batal
               </button>

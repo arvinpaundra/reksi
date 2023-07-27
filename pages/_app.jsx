@@ -2,6 +2,7 @@ import { ToastContainer } from 'react-toastify';
 import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-modern-drawer/dist/index.css';
+import { FetchUserProvider } from '../contexts/FetchUserContext';
 
 const contextToastClass = {
   success: 'bg-green',
@@ -12,7 +13,7 @@ const contextToastClass = {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <>
+    <FetchUserProvider>
       <ToastContainer
         toastClassName={({ type }) =>
           contextToastClass[type || 'default'] +
@@ -21,10 +22,9 @@ function MyApp({ Component, pageProps }) {
         theme="colored"
         autoClose={3000}
         position="top-right"
-        hideProgressBar
       />
       <Component {...pageProps} />
-    </>
+    </FetchUserProvider>
   );
 }
 

@@ -2,7 +2,7 @@
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useContext } from 'react';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { FaBook } from 'react-icons/fa';
 import { IoPerson } from 'react-icons/io5';
@@ -12,9 +12,12 @@ import Card from '../../atoms/Card';
 import CardBody from '../../atoms/Card/CardBody';
 import Divider from '../../atoms/Divider';
 import { HiDocumentText } from 'react-icons/hi';
+import { useFetchUser } from '../../../contexts/FetchUserContext';
 
 const Sidebar = (props) => {
   const { data, role } = props;
+
+  const { isFetching, updateFetchStatus } = useFetchUser();
 
   const [user, setUser] = useState({
     name: '',
@@ -39,8 +42,12 @@ const Sidebar = (props) => {
   const { id: pemustaka_id } = data;
 
   useEffect(() => {
-    getDetailPemustakaAPI(pemustaka_id);
-  }, [getDetailPemustakaAPI, pemustaka_id]);
+    if (isFetching) {
+      getDetailPemustakaAPI(pemustaka_id);
+    }
+
+    updateFetchStatus(false);
+  }, [getDetailPemustakaAPI, pemustaka_id, isFetching, updateFetchStatus]);
 
   const router = useRouter();
 

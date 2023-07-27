@@ -17,8 +17,11 @@ import { getTotalRequestAccess } from '../../../services/request_access';
 import { getTotalRepositories } from '../../../services/repository';
 import { HiDocumentText } from 'react-icons/hi';
 import jwtDecode from 'jwt-decode';
+import { useFetchUser } from '../../../contexts/FetchUserContext';
 
 const SidebarStaff = ({ data, role }) => {
+  const { isFetching, updateFetchStatus } = useFetchUser();
+
   const [user, setUser] = useState({
     name: '',
     role: '',
@@ -45,8 +48,12 @@ const SidebarStaff = ({ data, role }) => {
   const { id: staff_id } = data;
 
   useEffect(() => {
-    getDetailStaffAPI(staff_id);
-  }, [getDetailStaffAPI, staff_id]);
+    if (isFetching) {
+      getDetailStaffAPI(staff_id);
+    }
+
+    updateFetchStatus(false);
+  }, [getDetailStaffAPI, staff_id, isFetching, updateFetchStatus]);
 
   const getTotalRequestAccessAPI = useCallback(async () => {
     try {

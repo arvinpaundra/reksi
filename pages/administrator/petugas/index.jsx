@@ -17,7 +17,6 @@ import { getAllRoles } from '../../../services/role';
 import { Dialog, Transition } from '@headlessui/react';
 import CardHeader from '../../../components/atoms/Card/CardHeader';
 import { FormatDateIntl } from '../../../helper/format_date_intl';
-import { FormatDateInput } from '../../../helper/format_date_input';
 
 const AdministratorPetugas = ({ data }) => {
   const [staffs, setStaffs] = useState([]);

@@ -17,7 +17,6 @@ import CardFooter from '../../../../components/atoms/Card/CardFooter';
 import { ButtonFilled } from '../../../../components/atoms/Button';
 import Footer from '../../../../components/organisms/Footer';
 import jwtDecode from 'jwt-decode';
-import { PatternFormat } from 'react-number-format';
 import { Listbox } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
@@ -186,6 +185,7 @@ const AdministratorEditPetugas = ({ data }) => {
                   visibility="petugas"
                   onRoleChange={handleRoleChange}
                   error={errors?.role_id}
+                  defaultValue={staff?.role}
                 />
                 {errors && <p className="text-red text-sm">{errors?.role_id}</p>}
               </div>
@@ -238,17 +238,11 @@ const AdministratorEditPetugas = ({ data }) => {
                 <label className="text-sm text-black" htmlFor="birth_date">
                   Tanggal Lahir
                 </label>
-                <PatternFormat
+                <Input
+                  type="date"
+                  id="date_validated"
                   value={staff.birth_date}
-                  format="##-##-####"
-                  placeholder="hh-bb-tttt"
-                  displayType="input"
-                  type="text"
-                  onValueChange={(values, sourceInfo) =>
-                    setStaff({ ...staff, birth_date: values.formattedValue })
-                  }
-                  mask=" "
-                  customInput={Input}
+                  onChange={(event) => setStaff({ ...staff, birth_date: event.target.value })}
                 />
               </div>
               <div className="flex flex-col gap-1 w-full md:col-span-6">

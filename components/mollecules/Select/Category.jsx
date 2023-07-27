@@ -4,10 +4,11 @@ import { getCategories } from '../../../services/category';
 import useDebounce from '../../../hooks/use-debounce';
 import DropdownIndicator from '../../atoms/DropdownIndicator';
 
-const SelectCategory = ({ error, onCategoryChange }) => {
+const SelectCategory = ({ error, onCategoryChange, defaultValue = null }) => {
   const [selectedOption, setSelectedOption] = useState();
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingDefault, setLoadingDefault] = useState(false);
   const [search, setSearch] = useState('');
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
@@ -15,9 +16,7 @@ const SelectCategory = ({ error, onCategoryChange }) => {
   const getCategoriesAPI = useCallback(async (keyword) => {
     try {
       setLoading(true);
-
       const response = await getCategories(keyword, 5, 0);
-
       const transformedResponses = response?.data?.map((item) => ({
         value: item.id,
         label: item.name,
@@ -30,9 +29,32 @@ const SelectCategory = ({ error, onCategoryChange }) => {
     }
   }, []);
 
+  const getDefaultValue = useCallback(async (defaultValue) => {
+    try {
+      setLoadingDefault(true);
+
+      const defaultCategory = await getCategories(defaultValue, 1, 0);
+      const defaultLabelCategory = defaultCategory?.data?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+
+      setSelectedOption(defaultLabelCategory);
+    } catch (error) {
+    } finally {
+      setLoadingDefault(false);
+    }
+  }, []);
+
   useEffect(() => {
     getCategoriesAPI(categoryDeb);
   }, [getCategoriesAPI, categoryDeb]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      getDefaultValue(defaultValue);
+    }
+  }, [getDefaultValue, defaultValue]);
 
   useEffect(() => {
     if (document.body !== 'undefined') {
@@ -90,8 +112,10 @@ const SelectCategory = ({ error, onCategoryChange }) => {
       value={selectedOption}
       onChange={handleCategoryChange}
       menuPortalTarget={menuPortalTarget}
-      isLoading={loading}
+      isLoading={loading || loadingDefault}
       loadingMessage={() => 'Memuat . . .'}
+      getOptionValue={(option) => option.value}
+      getOptionLabel={(option) => option.label}
       menuPlacement="auto"
       isClearable
     />

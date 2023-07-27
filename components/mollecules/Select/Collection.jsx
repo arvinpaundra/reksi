@@ -4,10 +4,11 @@ import { getAllCollections } from '../../../services/collection';
 import Select from 'react-select';
 import DropdownIndicator from '../../atoms/DropdownIndicator';
 
-const SelectCollection = ({ error, onCollectionChange, visibility }) => {
+const SelectCollection = ({ error, onCollectionChange, visibility, defaultValue = null }) => {
   const [selectedOption, setSelectedOption] = useState();
   const [collections, setCollections] = useState([]);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingDefault, setLoadingDefault] = useState(false);
   const [search, setSearch] = useState('');
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
@@ -30,9 +31,32 @@ const SelectCollection = ({ error, onCollectionChange, visibility }) => {
     }
   }, []);
 
+  const getDefaultValue = useCallback(async (defaultValue, visibility) => {
+    try {
+      setLoadingDefault(true);
+
+      const defaultCollection = await getAllCollections(defaultValue, visibility, 1, 0);
+      const defaultlabelCollection = defaultCollection?.data?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+
+      setSelectedOption(defaultlabelCollection);
+    } catch (error) {
+    } finally {
+      setLoadingDefault(false);
+    }
+  }, []);
+
   useEffect(() => {
     getCollectionsAPI(collectionDeb, visibility);
   }, [getCollectionsAPI, collectionDeb, visibility]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      getDefaultValue(defaultValue, visibility);
+    }
+  }, [getDefaultValue, defaultValue, visibility]);
 
   useEffect(() => {
     if (document.body !== 'undefined') {
@@ -89,7 +113,7 @@ const SelectCollection = ({ error, onCollectionChange, visibility }) => {
       isSearchable
       value={selectedOption}
       onChange={handleCollectionChange}
-      isLoading={loading}
+      isLoading={loading || loadingDefault}
       menuPortalTarget={menuPortalTarget}
       loadingMessage={() => 'Memuat . . .'}
       menuPlacement="auto"

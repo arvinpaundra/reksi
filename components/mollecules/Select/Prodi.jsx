@@ -3,7 +3,7 @@ import { getStudyProgramsByDepartement } from '../../../services/study_program';
 import DropdownIndicator from '../../atoms/DropdownIndicator';
 import Select from 'react-select';
 
-const SelectProdi = ({ onProdiChange, error, departement_id }) => {
+const SelectProdi = ({ onProdiChange, error, departement_id, defaultValue = null }) => {
   const [prodi, setProdi] = useState([]);
   const [selectedOption, setSelectedOption] = useState();
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
@@ -21,12 +21,32 @@ const SelectProdi = ({ onProdiChange, error, departement_id }) => {
     } catch (err) {}
   }, []);
 
+  const getDefaultValue = useCallback(async (defaultValue, departement_id) => {
+    try {
+      const defaultProdi = await getStudyProgramsByDepartement(departement_id);
+      const defaultLabelProdi = defaultProdi?.data
+        ?.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))
+        .filter((prodi) => prodi?.label?.toLowerCase()?.includes(defaultValue?.toLowerCase()));
+
+      setSelectedOption(defaultLabelProdi);
+    } catch (error) {}
+  }, []);
+
   useEffect(() => {
     if (departement_id) {
       getProdiAPI(departement_id);
     }
     setMenuPortalTarget(document.body);
   }, [getProdiAPI, departement_id]);
+
+  useEffect(() => {
+    if (departement_id && defaultValue) {
+      getDefaultValue(defaultValue, departement_id);
+    }
+  }, [getDefaultValue, defaultValue, departement_id]);
 
   useEffect(() => {
     if (document.body !== 'undefined') {

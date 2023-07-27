@@ -10,7 +10,6 @@ import CardBody from '../../../../components/atoms/Card/CardBody';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import ImportantField from '../../../../components/atoms/Important';
 import { Input } from '../../../../components/atoms/Input';
-import { PatternFormat } from 'react-number-format';
 import { Listbox } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import Divider from '../../../../components/atoms/Divider';
@@ -227,6 +226,7 @@ const PustakawanEditPemustaka = ({ data }) => {
                     error={errors?.role_id}
                     onRoleChange={handleRoleChange}
                     visibility="pemustaka"
+                    defaultValue={pemustaka?.role}
                   />
                   {errors && <p className="text-red text-sm">{errors?.role_id}</p>}
                 </div>
@@ -247,17 +247,13 @@ const PustakawanEditPemustaka = ({ data }) => {
                   <label className="text-sm text-black" htmlFor="birth_date">
                     Tanggal Lahir
                   </label>
-                  <PatternFormat
+                  <Input
+                    type="date"
+                    id="date_validated"
                     value={pemustaka.birth_date}
-                    format="##-##-####"
-                    placeholder="hh-bb-tttt"
-                    displayType="input"
-                    type="text"
-                    onValueChange={(values, sourceInfo) =>
-                      setPemustaka({ ...pemustaka, birth_date: values.formattedValue })
+                    onChange={(event) =>
+                      setPemustaka({ ...pemustaka, birth_date: event.target.value })
                     }
-                    mask=" "
-                    customInput={Input}
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -350,6 +346,7 @@ const PustakawanEditPemustaka = ({ data }) => {
                   <SelectDepartement
                     error={errors?.departement_id}
                     onDepartementChange={handleDepartementChange}
+                    defaultValue={pemustaka?.departement}
                   />
                   {errors && <p className="text-red text-sm">{errors?.departement_id}</p>}
                 </div>
@@ -361,6 +358,7 @@ const PustakawanEditPemustaka = ({ data }) => {
                     error={errors?.study_program_id}
                     departement_id={pemustaka?.departement_id}
                     onProdiChange={handleProdiChange}
+                    defaultValue={pemustaka?.study_program}
                   />
                   {errors && <p className="text-red text-sm">{errors?.study_program_id}</p>}
                 </div>
@@ -559,15 +557,6 @@ const PustakawanEditPemustaka = ({ data }) => {
 };
 
 export default PustakawanEditPemustaka;
-
-const PatternFormatError = (props) => {
-  return (
-    <input
-      className="border border-red rounded-xl py-2 px-4 outline-none focus:border-blue w-full"
-      {...props}
-    />
-  );
-};
 
 export function getServerSideProps({ req }) {
   const { token } = req.cookies;

@@ -3,7 +3,7 @@ import { getAllRoles } from '../../../services/role';
 import DropdownIndicator from '../../atoms/DropdownIndicator';
 import Select from 'react-select';
 
-const SelectRole = ({ error, onRoleChange, visibility = '' }) => {
+const SelectRole = ({ error, onRoleChange, visibility = '', defaultValue = null }) => {
   const [roles, setRoles] = useState([]);
   const [selectedOption, setSelectedOption] = useState();
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
@@ -21,10 +21,30 @@ const SelectRole = ({ error, onRoleChange, visibility = '' }) => {
     } catch (err) {}
   }, []);
 
+  const getDefaultValue = useCallback(async (defaultValue) => {
+    try {
+      const defaultRole = await getAllRoles('');
+      const defaultLabelRole = defaultRole?.data
+        ?.map((item) => ({
+          value: item.id,
+          label: item.role,
+        }))
+        .filter((role) => role?.label?.toLowerCase()?.includes(defaultValue?.toLowerCase()));
+
+      setSelectedOption(defaultLabelRole);
+    } catch (error) {}
+  }, []);
+
   useEffect(() => {
     getAllRoleAPI(visibility);
     setMenuPortalTarget(document.body);
   }, [getAllRoleAPI, visibility]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      getDefaultValue(defaultValue);
+    }
+  }, [getDefaultValue, defaultValue]);
 
   useEffect(() => {
     if (document.body !== 'undefined') {

@@ -12,7 +12,6 @@ import CardFooter from '../../../../components/atoms/Card/CardFooter';
 import Divider from '../../../../components/atoms/Divider';
 import ImportantField from '../../../../components/atoms/Important';
 import { Input, InputFile } from '../../../../components/atoms/Input';
-import { PatternFormat } from 'react-number-format';
 import SelectDepartement from '../../../../components/mollecules/Select/Departement';
 import CardBody from '../../../../components/atoms/Card/CardBody';
 import CardHeader from '../../../../components/atoms/Card/CardHeader';
@@ -36,13 +35,13 @@ const AdministratorTugasAkhir = ({ data }) => {
     update_desc: '',
   });
 
-  const [category, setCategory] = useState({});
-  const [departement, setDepartement] = useState({});
-  const [author, setAuthor] = useState({});
-  const [firstMentor, setFirstMentor] = useState({});
-  const [secondMentor, setSecondMentor] = useState({});
-  const [firstExaminer, setFirstExaminer] = useState({});
-  const [secondExaminer, setSecondExaminer] = useState({});
+  const [category, setCategory] = useState('');
+  const [departement, setDepartement] = useState('');
+  const [author, setAuthor] = useState('');
+  const [firstMentor, setFirstMentor] = useState('');
+  const [secondMentor, setSecondMentor] = useState('');
+  const [firstExaminer, setFirstExaminer] = useState('');
+  const [secondExaminer, setSecondExaminer] = useState('');
   const [improvement, setImprovement] = useState(false);
   const [fileValidityPage, setFileValidityPage] = useState(null);
   const [fileCoverAndListContent, setCoverAndListContent] = useState(null);
@@ -56,8 +55,7 @@ const AdministratorTugasAkhir = ({ data }) => {
   const handlerUpload = async (event) => {
     event.preventDefault();
 
-    console.log(departement);
-
+    console.log(repository.date_validated);
     const data = new FormData();
 
     data.append('validity_page', fileValidityPage);
@@ -71,10 +69,10 @@ const AdministratorTugasAkhir = ({ data }) => {
     data.append('category_id', category || '');
     data.append('departement_id', departement || '');
     data.append('author', author || '');
-    data.append('first_examiner', firstExaminer?.id || '');
-    data.append('second_examiner', secondExaminer?.id || '');
-    data.append('first_mentor', firstMentor?.id || '');
-    data.append('second_mentor', secondMentor?.id || '');
+    data.append('first_examiner', firstExaminer || '');
+    data.append('second_examiner', secondExaminer || '');
+    data.append('first_mentor', firstMentor || '');
+    data.append('second_mentor', secondMentor || '');
     data.append('title', repository?.title);
     data.append('abstract', repository?.abstract);
     data.append('date_validated', repository?.date_validated);
@@ -155,16 +153,16 @@ const AdministratorTugasAkhir = ({ data }) => {
 
             <CardBody className="p-4 md:p-6 flex flex-col gap-6">
               <div className="flex flex-col gap-4">
-                <h3 className="text-lg font-medium">Lengkapi data repositori</h3>
+                <h3 className="text-lg font-medium">Lengkapi data karya tulis ilmiah</h3>
                 <div className="flex flex-col gap-1">
                   <label htmlFor="title">
-                    Judul Repositori
+                    Judul Karya Tulis Ilmiah
                     <ImportantField />
                   </label>
                   <Input
                     type="text"
                     id="title"
-                    placeholder="Judul Repositori"
+                    placeholder="Judul Karya Tulis Ilmiah"
                     value={repository.title}
                     onChange={(event) =>
                       setRepository({ ...repository, title: event.target.value })
@@ -201,7 +199,7 @@ const AdministratorTugasAkhir = ({ data }) => {
                     <ImportantField />
                   </label>
                   <SelectPemustaka onPemustakaChange={handleAuthorChange} error={errors?.author} />
-                  {errors && <p className="text-red text-sm">{errors?.first_mentor}</p>}
+                  {errors && <p className="text-red text-sm">{errors?.author}</p>}
                 </div>
                 <div className="flex flex-col gap-1">
                   <label htmlFor="first_mentor">
@@ -252,37 +250,16 @@ const AdministratorTugasAkhir = ({ data }) => {
                     Tanggal Disahkan
                     <ImportantField />
                   </label>
-                  {errors?.date_validated ? (
-                    <>
-                      <PatternFormat
-                        value={repository.date_validated}
-                        format="##-##-####"
-                        placeholder="hh-bb-tttt"
-                        displayType="input"
-                        type="text"
-                        onValueChange={(values, sourceInfo) =>
-                          setRepository({ ...repository, date_validated: values.formattedValue })
-                        }
-                        mask=" "
-                        customInput={PatternFormatError}
-                      />
-
-                      {errors && <p className="text-red text-sm">{errors?.date_validated}</p>}
-                    </>
-                  ) : (
-                    <PatternFormat
-                      value={repository.date_validated}
-                      format="##-##-####"
-                      placeholder="hh-bb-tttt"
-                      displayType="input"
-                      type="text"
-                      onValueChange={(values, sourceInfo) =>
-                        setRepository({ ...repository, date_validated: values.formattedValue })
-                      }
-                      mask=" "
-                      customInput={Input}
-                    />
-                  )}
+                  <Input
+                    type="date"
+                    error={errors?.date_validated}
+                    id="date_validated"
+                    value={repository.date_validated}
+                    onChange={(event) =>
+                      setRepository({ ...repository, date_validated: event.target.value })
+                    }
+                  />
+                  {errors && <p className="text-red text-sm">{errors?.date_validated}</p>}
                 </div>
                 <div className="flex flex-col gap-1">
                   <label htmlFor="abstract">
@@ -348,7 +325,7 @@ const AdministratorTugasAkhir = ({ data }) => {
               <Divider />
 
               <div className="flex flex-col gap-4">
-                <h3 className="text-lg font-medium">Unggah dokumen repositori</h3>
+                <h3 className="text-lg font-medium">Unggah dokumen karya tulis ilmiah</h3>
                 <div className="flex flex-col gap-1">
                   <label>
                     Halaman Pengesahan
@@ -492,15 +469,6 @@ const AdministratorTugasAkhir = ({ data }) => {
 };
 
 export default AdministratorTugasAkhir;
-
-const PatternFormatError = (props) => {
-  return (
-    <input
-      className="border border-red rounded-xl py-2 px-4 outline-none focus:border-blue w-full"
-      {...props}
-    />
-  );
-};
 
 export function getServerSideProps({ req }) {
   const { token } = req.cookies;

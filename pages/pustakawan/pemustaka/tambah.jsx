@@ -19,7 +19,6 @@ import { Listbox } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import SelectDepartement from '../../../components/mollecules/Select/Departement';
 import SelectProdi from '../../../components/mollecules/Select/Prodi';
-import { PatternFormat } from 'react-number-format';
 import SelectRole from '../../../components/mollecules/Select/Role';
 import { setCreatePemustaka } from '../../../services/pemustaka';
 
@@ -185,17 +184,13 @@ const PustakawanTambahPemustaka = ({ data }) => {
                   <label className="text-sm text-black" htmlFor="birth_date">
                     Tanggal Lahir
                   </label>
-                  <PatternFormat
+                  <Input
+                    type="date"
+                    id="date_validated"
                     value={pemustaka.birth_date}
-                    format="##-##-####"
-                    placeholder="hh-bb-tttt"
-                    displayType="input"
-                    type="text"
-                    onValueChange={(values, sourceInfo) =>
-                      setPemustaka({ ...pemustaka, birth_date: values.formattedValue })
+                    onChange={(event) =>
+                      setPemustaka({ ...pemustaka, birth_date: event.target.value })
                     }
-                    mask=" "
-                    customInput={Input}
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -502,15 +497,6 @@ const PustakawanTambahPemustaka = ({ data }) => {
 };
 
 export default PustakawanTambahPemustaka;
-
-const PatternFormatError = (props) => {
-  return (
-    <input
-      className="border border-red rounded-xl py-2 px-4 outline-none focus:border-blue w-full"
-      {...props}
-    />
-  );
-};
 
 export function getServerSideProps({ req }) {
   const { token } = req.cookies;

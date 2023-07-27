@@ -8,7 +8,6 @@ import CardFooter from '../../../../../components/atoms/Card/CardFooter';
 import Divider from '../../../../../components/atoms/Divider';
 import ImportantField from '../../../../../components/atoms/Important';
 import { Input, InputFile } from '../../../../../components/atoms/Input';
-import { PatternFormat } from 'react-number-format';
 import { BsFillTrashFill } from 'react-icons/bs';
 import SelectPemustaka from '../../../../../components/mollecules/Select/Pemustaka';
 import SelectDepartement from '../../../../../components/mollecules/Select/Departement';
@@ -154,11 +153,7 @@ const EditResearchReportDosen = ({ data }) => {
       }
 
       toast.success('Yeay! Sukses edit karya tulis ilmiah.');
-      if (role === 'Dosen') {
-        router.push('/dosen/repositori/dibuat');
-      } else if (role === 'Mahasiswa') {
-        router.push('/mahasiswa/repositori');
-      }
+      router.push('/dosen/repositori/dibuat');
       setErrors();
     } catch (error) {
     } finally {
@@ -188,16 +183,16 @@ const EditResearchReportDosen = ({ data }) => {
 
               <CardBody className="p-4 md:p-6 flex flex-col gap-6">
                 <div className="flex flex-col gap-4">
-                  <h3 className="text-lg font-medium">Lengkapi data repositori</h3>
+                  <h3 className="text-lg font-medium">Lengkapi data karya tulis ilmiah</h3>
                   <div className="flex flex-col gap-1">
                     <label htmlFor="title">
-                      Judul Repositori
+                      Judul Karya Tulis Ilmiah
                       <ImportantField />
                     </label>
                     <Input
                       type="text"
                       id="title"
-                      placeholder="Judul Repositori"
+                      placeholder="Judul Karya Tulis Ilmiah"
                       value={repository?.title}
                       onChange={(event) =>
                         setRepository({ ...repository, title: event.target.value })
@@ -215,6 +210,7 @@ const EditResearchReportDosen = ({ data }) => {
                       onCollectionChange={handleCollectionChange}
                       visibility="Semua"
                       error={errors?.collection_id}
+                      defaultValue={repository?.collection}
                     />
                     {errors && <p className="text-red text-sm">{errors?.collection_id}</p>}
                   </div>
@@ -226,6 +222,7 @@ const EditResearchReportDosen = ({ data }) => {
                     <SelectCategory
                       onCategoryChange={handleCategoryChange}
                       error={errors?.category_id}
+                      defaultValue={repository?.category}
                     />
                     {errors && <p className="text-red text-sm">{errors?.category_id}</p>}
                   </div>
@@ -237,6 +234,7 @@ const EditResearchReportDosen = ({ data }) => {
                     <SelectDepartement
                       onDepartementChange={handleDepartementChange}
                       error={errors?.departement_id}
+                      defaultValue={repository?.departement}
                     />
                     {errors && <p className="text-red text-sm">{errors?.departement_id}</p>}
                   </div>
@@ -276,37 +274,6 @@ const EditResearchReportDosen = ({ data }) => {
                       Tanggal Disahkan
                       <ImportantField />
                     </label>
-                    {errors?.date_validated ? (
-                      <>
-                        <PatternFormat
-                          value={repository?.date_validated}
-                          format="##-##-####"
-                          placeholder="hh-bb-tttt"
-                          displayType="input"
-                          type="text"
-                          onValueChange={(values, sourceInfo) =>
-                            setRepository({ ...repository, date_validated: values.formattedValue })
-                          }
-                          mask=" "
-                          customInput={PatternFormatError}
-                        />
-
-                        {errors && <p className="text-red text-sm">{errors?.date_validated}</p>}
-                      </>
-                    ) : (
-                      <PatternFormat
-                        value={repository?.date_validated}
-                        format="##-##-####"
-                        placeholder="hh-bb-tttt"
-                        displayType="input"
-                        type="text"
-                        onValueChange={(values, sourceInfo) =>
-                          setRepository({ ...repository, date_validated: values.formattedValue })
-                        }
-                        mask=" "
-                        customInput={Input}
-                      />
-                    )}
                   </div>
                   <div className="flex flex-col gap-1">
                     <label htmlFor="abstract">
@@ -331,7 +298,7 @@ const EditResearchReportDosen = ({ data }) => {
                 <Divider />
 
                 <div className="flex flex-col gap-4">
-                  <h3 className="text-lg font-medium">Ubah dokumen repositori</h3>
+                  <h3 className="text-lg font-medium">Ubah dokumen karya tulis ilmiah</h3>
                   <div className="flex flex-col gap-1">
                     <label>Halaman Pengesahan</label>
                     <InputFile
@@ -452,15 +419,6 @@ const EditResearchReportDosen = ({ data }) => {
 };
 
 export default EditResearchReportDosen;
-
-const PatternFormatError = (props) => {
-  return (
-    <input
-      className="border border-red rounded-xl py-2 px-4 outline-none focus:border-blue w-full"
-      {...props}
-    />
-  );
-};
 
 export function getServerSideProps({ req }) {
   const { token } = req.cookies;

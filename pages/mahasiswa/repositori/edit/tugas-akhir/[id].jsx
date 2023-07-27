@@ -8,7 +8,6 @@ import Divider from '../../../../../components/atoms/Divider';
 import { ButtonFilled } from '../../../../../components/atoms/Button';
 import { Input, InputFile } from '../../../../../components/atoms/Input';
 import ImportantField from '../../../../../components/atoms/Important';
-import { PatternFormat } from 'react-number-format';
 import SelectLecture from '../../../../../components/mollecules/Select/Lecture';
 import Card from '../../../../../components/atoms/Card';
 import CardHeader from '../../../../../components/atoms/Card/CardHeader';
@@ -129,10 +128,10 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
     data.append('departement_id', repository?.departement_id || '');
     data.append('category_id', repository?.category_id || '');
     data.append('author', pemustaka_id || '');
-    data.append('first_examiner', repository?.contributors[0].pemustaka_id || '');
-    data.append('second_examiner', repository?.contributors[1].pemustaka_id || '');
-    data.append('first_mentor', repository?.contributors[2].pemustaka_id || '');
-    data.append('second_mentor', repository?.contributors[3].pemustaka_id || '');
+    data.append('first_mentor', repository?.contributors[0].pemustaka_id || '');
+    data.append('second_mentor', repository?.contributors[1].pemustaka_id || '');
+    data.append('first_examiner', repository?.contributors[2].pemustaka_id || '');
+    data.append('second_examiner', repository?.contributors[3].pemustaka_id || '');
     data.append('title', repository?.title);
     data.append('abstract', repository?.abstract);
     data.append('date_validated', repository?.date_validated);
@@ -186,16 +185,16 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
 
             <CardBody className="p-4 md:p-6 flex flex-col gap-6">
               <div className="flex flex-col gap-4">
-                <h3 className="text-lg font-medium">Lengkapi data repositori</h3>
+                <h3 className="text-lg font-medium">Lengkapi data karya tulis ilmiah</h3>
                 <div className="flex flex-col gap-1">
                   <label htmlFor="title">
-                    Judul Repositori
+                    Judul Karya Tulis Ilmiah
                     <ImportantField />
                   </label>
                   <Input
                     type="text"
                     id="title"
-                    placeholder="Judul Repositori"
+                    placeholder="Judul Karya Tulis Ilmiah"
                     value={repository?.title}
                     onChange={(event) =>
                       setRepository({ ...repository, title: event.target.value })
@@ -212,6 +211,7 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
                   <SelectCategory
                     error={errors?.category_id}
                     onCategoryChange={handleCategoryChange}
+                    defaultValue={repository?.category}
                   />
                   {errors && <p className="text-red text-sm">{errors?.category_id}</p>}
                 </div>
@@ -223,6 +223,7 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
                   <SelectDepartement
                     error={errors?.departement_id}
                     onDepartementChange={handleDepartementChange}
+                    defaultValue={repository?.departement}
                   />
                   {errors && <p className="text-red text-sm">{errors?.departement_id}</p>}
                 </div>
@@ -234,6 +235,7 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
                   <SelectLecture
                     onLectureChange={handleFirstMentorChange}
                     error={errors?.first_mentor}
+                    defaultValue={repository?.contributors[0]?.fullname}
                   />
                   {errors && <p className="text-red text-sm">{errors?.first_mentor}</p>}
                 </div>
@@ -245,6 +247,7 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
                   <SelectLecture
                     onLectureChange={handleSecondMentorChange}
                     error={errors?.second_mentor}
+                    defaultValue={repository?.contributors[1]?.fullname}
                   />
                   {errors && <p className="text-red text-sm">{errors?.second_mentor}</p>}
                 </div>
@@ -256,6 +259,7 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
                   <SelectLecture
                     onLectureChange={handleFirstExaminerChange}
                     error={errors?.first_examiner}
+                    defaultValue={repository?.contributors[2]?.fullname}
                   />
                   {errors && <p className="text-red text-sm">{errors?.first_examiner}</p>}
                 </div>
@@ -267,6 +271,7 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
                   <SelectLecture
                     onLectureChange={handleSecondExaminerChange}
                     error={errors?.second_examiner}
+                    defaultValue={repository?.contributors[3]?.fullname}
                   />
                   {errors && <p className="text-red text-sm">{errors?.second_examiner}</p>}
                 </div>
@@ -275,37 +280,16 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
                     Tanggal Disahkan
                     <ImportantField />
                   </label>
-                  {errors?.date_validated ? (
-                    <>
-                      <PatternFormat
-                        value={repository?.date_validated}
-                        format="##-##-####"
-                        placeholder="hh-bb-tttt"
-                        displayType="input"
-                        type="text"
-                        onValueChange={(values, sourceInfo) =>
-                          setRepository({ ...repository, date_validated: values.formattedValue })
-                        }
-                        mask=" "
-                        customInput={PatternFormatError}
-                      />
-
-                      {errors && <p className="text-red text-sm">{errors?.date_validated}</p>}
-                    </>
-                  ) : (
-                    <PatternFormat
-                      value={repository?.date_validated}
-                      format="##-##-####"
-                      placeholder="hh-bb-tttt"
-                      displayType="input"
-                      type="text"
-                      onValueChange={(values, sourceInfo) =>
-                        setRepository({ ...repository, date_validated: values.formattedValue })
-                      }
-                      mask=" "
-                      customInput={Input}
-                    />
-                  )}
+                  <Input
+                    type="date"
+                    error={errors?.date_validated}
+                    id="date_validated"
+                    value={repository.date_validated}
+                    onChange={(event) =>
+                      setRepository({ ...repository, date_validated: event.target.value })
+                    }
+                  />
+                  {errors && <p className="text-red text-sm">{errors?.date_validated}</p>}
                 </div>
                 <div className="flex flex-col gap-1">
                   <label htmlFor="abstract">
@@ -377,7 +361,7 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
               <Divider />
 
               <div className="flex flex-col gap-4">
-                <h3 className="text-lg font-medium">Ubah dokumen repositori</h3>
+                <h3 className="text-lg font-medium">Ubah dokumen karya tulis ilmiah</h3>
                 <div className="flex flex-col gap-1">
                   <label>Halaman Pengesahan</label>
                   <InputFile
@@ -497,15 +481,6 @@ const EditTugasAkhirMahasiswa = ({ data }) => {
 };
 
 export default EditTugasAkhirMahasiswa;
-
-const PatternFormatError = (props) => {
-  return (
-    <input
-      className="border border-red rounded-xl py-2 px-4 outline-none focus:border-blue w-full"
-      {...props}
-    />
-  );
-};
 
 export function getServerSideProps({ req }) {
   const { token } = req.cookies;

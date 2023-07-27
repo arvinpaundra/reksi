@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { PatternFormat } from 'react-number-format';
 import { toast } from 'react-toastify';
 import { setCreateFinalProjectReport } from '../../../services/repository';
 import { ButtonFilled } from '../../atoms/Button';
@@ -33,12 +32,12 @@ const CardFinalProject = (props) => {
     update_desc: '',
   });
 
-  const [category, setCategory] = useState({});
-  const [departement, setDepartement] = useState({});
-  const [firstMentor, setFirstMentor] = useState({});
-  const [secondMentor, setSecondMentor] = useState({});
-  const [firstExaminer, setFirstExaminer] = useState({});
-  const [secondExaminer, setSecondExaminer] = useState({});
+  const [category, setCategory] = useState('');
+  const [departement, setDepartement] = useState('');
+  const [firstMentor, setFirstMentor] = useState('');
+  const [secondMentor, setSecondMentor] = useState('');
+  const [firstExaminer, setFirstExaminer] = useState('');
+  const [secondExaminer, setSecondExaminer] = useState('');
   const [improvement, setImprovement] = useState(false);
   const [fileValidityPage, setFileValidityPage] = useState(null);
   const [fileCoverAndListContent, setCoverAndListContent] = useState(null);
@@ -132,16 +131,16 @@ const CardFinalProject = (props) => {
 
       <CardBody className="p-4 md:p-6 flex flex-col gap-6">
         <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-medium">Lengkapi data repositori</h3>
+          <h3 className="text-lg font-medium">Lengkapi data karya tulis ilmiah</h3>
           <div className="flex flex-col gap-1">
             <label htmlFor="title">
-              Judul Repositori
+              Judul Karya Tulis Ilmiah
               <ImportantField />
             </label>
             <Input
               type="text"
               id="title"
-              placeholder="Judul Repositori"
+              placeholder="Judul Karya Tulis Ilmiah"
               value={repository.title}
               onChange={(event) => setRepository({ ...repository, title: event.target.value })}
               error={errors?.title}
@@ -213,37 +212,16 @@ const CardFinalProject = (props) => {
               Tanggal Disahkan
               <ImportantField />
             </label>
-            {errors?.date_validated ? (
-              <>
-                <PatternFormat
-                  value={repository.date_validated}
-                  format="##-##-####"
-                  placeholder="hh-bb-tttt"
-                  displayType="input"
-                  type="text"
-                  onValueChange={(values, sourceInfo) =>
-                    setRepository({ ...repository, date_validated: values.formattedValue })
-                  }
-                  mask=" "
-                  customInput={PatternFormatError}
-                />
-
-                {errors && <p className="text-red text-sm">{errors?.date_validated}</p>}
-              </>
-            ) : (
-              <PatternFormat
-                value={repository.date_validated}
-                format="##-##-####"
-                placeholder="hh-bb-tttt"
-                displayType="input"
-                type="text"
-                onValueChange={(values, sourceInfo) =>
-                  setRepository({ ...repository, date_validated: values.formattedValue })
-                }
-                mask=" "
-                customInput={Input}
-              />
-            )}
+            <Input
+              type="date"
+              error={errors?.date_validated}
+              id="date_validated"
+              value={repository.date_validated}
+              onChange={(event) =>
+                setRepository({ ...repository, date_validated: event.target.value })
+              }
+            />
+            {errors && <p className="text-red text-sm">{errors?.date_validated}</p>}
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="abstract">
@@ -307,7 +285,7 @@ const CardFinalProject = (props) => {
         <Divider />
 
         <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-medium">Unggah dokumen repositori</h3>
+          <h3 className="text-lg font-medium">Unggah dokumen karya tulis ilmiah</h3>
           <div className="flex flex-col gap-1">
             <label>
               Halaman Pengesahan
@@ -442,15 +420,6 @@ const CardFinalProject = (props) => {
         )}
       </CardFooter>
     </Card>
-  );
-};
-
-const PatternFormatError = (props) => {
-  return (
-    <input
-      className="border border-red rounded-xl py-2 px-4 outline-none focus:border-blue w-full"
-      {...props}
-    />
   );
 };
 

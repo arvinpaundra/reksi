@@ -5,10 +5,11 @@ import { ROLE_DOSEN_ID } from '../../../constants';
 import DropdownIndicator from '../../atoms/DropdownIndicator';
 import useDebounce from '../../../hooks/use-debounce';
 
-const SelectLecture = ({ error, onLectureChange }) => {
+const SelectLecture = ({ error, onLectureChange, defaultValue = null }) => {
   const [selectedOption, setSelectedOption] = useState();
   const [lecturers, setLecturers] = useState([]);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingDefault, setLoadingDefault] = useState(false);
   const [search, setSearch] = useState('');
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
 
@@ -31,6 +32,39 @@ const SelectLecture = ({ error, onLectureChange }) => {
       setLoading(false);
     }
   }, []);
+
+  const getDefaultValue = useCallback(async (defaultValue) => {
+    try {
+      setLoadingDefault(true);
+      const defaultLecture = await getAllPemustaka(
+        defaultValue,
+        ROLE_DOSEN_ID,
+        '',
+        '',
+        '',
+        '',
+        1,
+        0,
+      );
+      const defaultLabelLecturer = defaultLecture?.data?.map((item) => ({
+        value: item.id,
+        label: item.fullname,
+        identity_number: item.identity_number,
+        departement: item.departement,
+      }));
+
+      setSelectedOption(defaultLabelLecturer);
+    } catch (error) {
+    } finally {
+      setLoadingDefault(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (defaultValue) {
+      getDefaultValue(defaultValue);
+    }
+  }, [getDefaultValue, defaultValue]);
 
   useEffect(() => {
     getLecturersAPI(lecturerDeb);
@@ -97,7 +131,7 @@ const SelectLecture = ({ error, onLectureChange }) => {
       value={selectedOption}
       menuPortalTarget={menuPortalTarget}
       onChange={handleLecturerChange}
-      isLoading={loading}
+      isLoading={loading || loadingDefault}
       loadingMessage={() => 'Memuat . . .'}
       menuPlacement="auto"
       isClearable

@@ -18,7 +18,6 @@ import SelectRole from '../../../components/mollecules/Select/Role';
 import { setRegisterStaff } from '../../../services/auth';
 import { Listbox } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import { PatternFormat } from 'react-number-format';
 import { regex } from '../../../helper/regex';
 
 const AdministratorTambahPetugas = ({ data }) => {
@@ -159,17 +158,11 @@ const AdministratorTambahPetugas = ({ data }) => {
                 <label className="text-sm text-black" htmlFor="birth_date">
                   Tanggal Lahir
                 </label>
-                <PatternFormat
-                  value={staff?.birth_date}
-                  format="##-##-####"
-                  placeholder="hh-bb-tttt"
-                  displayType="input"
-                  type="text"
-                  onValueChange={(values, sourceInfo) =>
-                    setStaff({ ...staff, birth_date: values.formattedValue })
-                  }
-                  mask=" "
-                  customInput={Input}
+                <Input
+                  type="date"
+                  id="date_validated"
+                  value={staff.birth_date}
+                  onChange={(event) => setStaff({ ...staff, birth_date: event.target.value })}
                 />
               </div>
               <div className="flex flex-col gap-1">
