@@ -151,6 +151,7 @@ const PemustakaRepositori = (props) => {
   ]);
 
   const pageChange = ({ selected }) => {
+    setIsFetching(true);
     setCurrPage(selected + 1);
   };
 

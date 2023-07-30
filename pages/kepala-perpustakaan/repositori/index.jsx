@@ -151,6 +151,7 @@ const KepalaPerpustakaanRepositori = ({ data }) => {
   }, [getTotalPendingRepositoriesAPI]);
 
   const pageChange = ({ selected }) => {
+    setIsFetching(true);
     setCurrPage(selected + 1);
   };
 

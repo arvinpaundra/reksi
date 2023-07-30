@@ -122,6 +122,7 @@ const KepalaPerpustakaanKonfirmasiRepositori = ({ data }) => {
   ]);
 
   const pageChange = ({ selected }) => {
+    setIsFetching(true);
     setCurrPage(selected + 1);
   };
 

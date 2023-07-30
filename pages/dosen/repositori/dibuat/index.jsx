@@ -148,6 +148,7 @@ const RepositoriDosen = (props) => {
   ]);
 
   const pageChange = ({ selected }) => {
+    setIsFetching(true);
     setCurrPage(selected + 1);
   };
 
