@@ -177,6 +177,7 @@ const PustakawanMagangIndustri = ({ data }) => {
                     <SelectPemustaka
                       onPemustakaChange={handleAuthorChange}
                       error={errors?.author}
+                      role="pemustaka"
                     />
                     {errors && <p className="text-red text-sm">{errors?.author}</p>}
                   </div>

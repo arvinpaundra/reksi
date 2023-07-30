@@ -198,7 +198,11 @@ const AdministratorTugasAkhir = ({ data }) => {
                     Pilih Author
                     <ImportantField />
                   </label>
-                  <SelectPemustaka onPemustakaChange={handleAuthorChange} error={errors?.author} />
+                  <SelectPemustaka
+                    onPemustakaChange={handleAuthorChange}
+                    error={errors?.author}
+                    role="pemustaka"
+                  />
                   {errors && <p className="text-red text-sm">{errors?.author}</p>}
                 </div>
                 <div className="flex flex-col gap-1">

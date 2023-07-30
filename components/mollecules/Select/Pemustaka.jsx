@@ -3,8 +3,9 @@ import { useCallback, useEffect, useState } from 'react';
 import useDebounce from '../../../hooks/use-debounce';
 import { getAllPemustaka } from '../../../services/pemustaka';
 import Select from 'react-select';
+import { ROLE_DOSEN_ID, ROLE_MAHASISWA_ID } from '../../../constants';
 
-const SelectPemustaka = ({ index, onPemustakaChange, error }) => {
+const SelectPemustaka = ({ index, onPemustakaChange, role = '', error }) => {
   const [loading, setLoading] = useState(null);
 
   const [selectedOption, setSelectedOption] = useState();
@@ -14,24 +15,51 @@ const SelectPemustaka = ({ index, onPemustakaChange, error }) => {
 
   const pemustakaDeb = useDebounce(searchPemustaka, 500);
 
-  const getAllPemustakaAPI = useCallback(async (keyword) => {
-    try {
-      setLoading(true);
-      const response = await getAllPemustaka(keyword, '', '', '', '', '', 5, 0);
+  const getAllPemustakaAPI = useCallback(
+    async (keyword) => {
+      try {
+        setLoading(true);
+        if (role === 'dosen') {
+          const response = await getAllPemustaka(keyword, ROLE_DOSEN_ID, '', '', '', '', 5, 0);
 
-      const transformedResponses = response?.data?.map((item) => ({
-        value: item.id,
-        label: item.fullname,
-        role: item.role,
-        departement: item.departement,
-      }));
+          const transformedResponses = response?.data?.map((item) => ({
+            value: item.id,
+            label: item.fullname,
+            role: item.role,
+            departement: item.departement,
+          }));
 
-      setPemustaka(transformedResponses);
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+          setPemustaka(transformedResponses);
+        } else if (role === 'mahasiswa') {
+          const response = await getAllPemustaka(keyword, ROLE_MAHASISWA_ID, '', '', '', '', 5, 0);
+
+          const transformedResponses = response?.data?.map((item) => ({
+            value: item.id,
+            label: item.fullname,
+            role: item.role,
+            departement: item.departement,
+          }));
+
+          setPemustaka(transformedResponses);
+        } else {
+          const response = await getAllPemustaka(keyword, '', '', '', '', '', 5, 0);
+
+          const transformedResponses = response?.data?.map((item) => ({
+            value: item.id,
+            label: item.fullname,
+            role: item.role,
+            departement: item.departement,
+          }));
+
+          setPemustaka(transformedResponses);
+        }
+      } catch (err) {
+      } finally {
+        setLoading(false);
+      }
+    },
+    [role],
+  );
 
   useEffect(() => {
     getAllPemustakaAPI(pemustakaDeb);
