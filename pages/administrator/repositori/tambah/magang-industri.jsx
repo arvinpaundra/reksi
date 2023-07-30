@@ -99,7 +99,7 @@ const AdministratorMagangIndustri = ({ data }) => {
     setAuthor(value);
   };
 
-  const handleDepartementChange = (_, { value }) => {
+  const handleDepartementChange = ({ value }) => {
     setDepartement(value);
   };
 
