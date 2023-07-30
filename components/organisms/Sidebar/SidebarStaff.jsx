@@ -17,7 +17,6 @@ import { getTotalRequestAccess } from '../../../services/request_access';
 import { getTotalRepositories } from '../../../services/repository';
 import { HiDocumentText } from 'react-icons/hi';
 import jwtDecode from 'jwt-decode';
-import { useFetchUser } from '../../../contexts/FetchUserContext';
 
 const SidebarStaff = ({ data, role }) => {
   const [user, setUser] = useState({
