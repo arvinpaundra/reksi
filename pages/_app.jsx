@@ -2,7 +2,6 @@ import { ToastContainer } from 'react-toastify';
 import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-modern-drawer/dist/index.css';
-import { FetchUserProvider } from '../contexts/FetchUserContext';
 
 const contextToastClass = {
   success: 'bg-green',

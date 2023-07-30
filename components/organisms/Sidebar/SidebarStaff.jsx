@@ -7,7 +7,7 @@ import { IoPerson } from 'react-icons/io5';
 import Divider from '../../atoms/Divider';
 import { MdLogout, MdOutlinePassword } from 'react-icons/md';
 import { BsGridFill, BsPersonCheckFill, BsDot } from 'react-icons/bs';
-import { FaBook, FaFolderOpen, FaSignature } from 'react-icons/fa';
+import { FaFolderOpen } from 'react-icons/fa';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { getDetailStaff } from '../../../services/staff';
 import { useCallback, useEffect, useState } from 'react';
