@@ -45,9 +45,6 @@ const CardResearchReport = (props) => {
   const [fileDapus, setFileDapus] = useState(null);
 
   const handlerUpload = async (event) => {
-    console.log(authors);
-    return;
-
     event.preventDefault();
 
     const data = new FormData();
