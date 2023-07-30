@@ -200,7 +200,7 @@ const PustakawanTugasAkhir = ({ data }) => {
                   <SelectPemustaka
                     onPemustakaChange={handleAuthorChange}
                     error={errors?.author}
-                    role="pemustaka"
+                    role="mahasiswa"
                   />
                   {errors && <p className="text-red text-sm">{errors?.author}</p>}
                 </div>
