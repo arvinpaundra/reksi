@@ -5,7 +5,7 @@ import { getAllPemustaka } from '../../../services/pemustaka';
 import Select from 'react-select';
 import { ROLE_DOSEN_ID, ROLE_MAHASISWA_ID } from '../../../constants';
 
-const SelectPemustaka = ({ index, onPemustakaChange, role = '', error }) => {
+const SelectPemustaka = ({ index, onPemustakaChange, role = '', error, defaultValue }) => {
   const [loading, setLoading] = useState(null);
 
   const [selectedOption, setSelectedOption] = useState();

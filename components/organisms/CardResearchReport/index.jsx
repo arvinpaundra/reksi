@@ -34,7 +34,7 @@ const CardResearchReport = (props) => {
   const [collection, setCollection] = useState('');
   const [departement, setDepartement] = useState('');
   const [category, setCategory] = useState('');
-  const [authors, setAuthors] = useState([user?.id]);
+  const [authors, setAuthors] = useState(['']);
   const [fileValidityPage, setFileValidityPage] = useState(null);
   const [fileCoverAndListContent, setCoverAndListContent] = useState(null);
   const [fileBab1, setFileBab1] = useState(null);
@@ -45,6 +45,9 @@ const CardResearchReport = (props) => {
   const [fileDapus, setFileDapus] = useState(null);
 
   const handlerUpload = async (event) => {
+    console.log(authors);
+    return;
+
     event.preventDefault();
 
     const data = new FormData();
@@ -192,16 +195,16 @@ const CardResearchReport = (props) => {
                 <p className="text-sm">Tambah author</p>
               </button>
 
-              {authors.length > 1 && (
+              {authors?.length > 0 && (
                 <div className="flex flex-col gap-3 w-full">
                   {authors.map((_, i) => (
-                    <div key={i + 1} className="flex items-center gap-2 w-full">
-                      <SelectPemustaka index={i + 1} onPemustakaChange={handlePemustakaChange} />
+                    <div key={i} className="flex items-center gap-2 w-full">
+                      <SelectPemustaka index={i} onPemustakaChange={handlePemustakaChange} />
 
-                      {i > 1 && (
+                      {i > 0 && (
                         <button
                           className="p-4 text-red hover:bg-red/10 rounded-full"
-                          onClick={() => removeSelectPemustaka(i + 1)}
+                          onClick={() => removeSelectPemustaka(i)}
                         >
                           <BsFillTrashFill size={17} />
                         </button>
