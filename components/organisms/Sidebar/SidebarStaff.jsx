@@ -20,8 +20,6 @@ import jwtDecode from 'jwt-decode';
 import { useFetchUser } from '../../../contexts/FetchUserContext';
 
 const SidebarStaff = ({ data, role }) => {
-  const { isFetching, updateFetchStatus } = useFetchUser();
-
   const [user, setUser] = useState({
     name: '',
     role: '',
@@ -48,12 +46,8 @@ const SidebarStaff = ({ data, role }) => {
   const { id: staff_id } = data;
 
   useEffect(() => {
-    if (isFetching) {
-      getDetailStaffAPI(staff_id);
-    }
-
-    updateFetchStatus(false);
-  }, [getDetailStaffAPI, staff_id, isFetching, updateFetchStatus]);
+    getDetailStaffAPI(staff_id);
+  }, [getDetailStaffAPI, staff_id]);
 
   const getTotalRequestAccessAPI = useCallback(async () => {
     try {

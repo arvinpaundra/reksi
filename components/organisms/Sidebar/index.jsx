@@ -12,12 +12,9 @@ import Card from '../../atoms/Card';
 import CardBody from '../../atoms/Card/CardBody';
 import Divider from '../../atoms/Divider';
 import { HiDocumentText } from 'react-icons/hi';
-import { useFetchUser } from '../../../contexts/FetchUserContext';
 
 const Sidebar = (props) => {
   const { data, role } = props;
-
-  const { isFetching, updateFetchStatus } = useFetchUser();
 
   const [user, setUser] = useState({
     name: '',
@@ -42,12 +39,8 @@ const Sidebar = (props) => {
   const { id: pemustaka_id } = data;
 
   useEffect(() => {
-    if (isFetching) {
-      getDetailPemustakaAPI(pemustaka_id);
-    }
-
-    updateFetchStatus(false);
-  }, [getDetailPemustakaAPI, pemustaka_id, isFetching, updateFetchStatus]);
+    getDetailPemustakaAPI(pemustaka_id);
+  }, [getDetailPemustakaAPI, pemustaka_id]);
 
   const router = useRouter();
 

@@ -22,8 +22,7 @@ import { FormatDateIntl } from '../../helper/format_date_intl';
 import { regex } from '../../helper/regex';
 
 const KepalaPerpustakaanProfil = ({ data }) => {
-  const { isFetching, updateFetchStatus } = useFetchUser();
-
+  const [isFetching, setIsFetching] = useState(true);
   const [enableEdit, setEnableEdit] = useState(false);
   const [loading, setLoading] = useState(null);
   const [errors, setErrors] = useState({});
@@ -65,10 +64,11 @@ const KepalaPerpustakaanProfil = ({ data }) => {
       getDetailStaffAPI(staff_id);
     }
 
-    updateFetchStatus(false);
-  }, [getDetailStaffAPI, staff_id, isFetching, updateFetchStatus]);
+    setIsFetching(false);
+  }, [getDetailStaffAPI, staff_id, isFetching]);
 
   const handleUpdateProfile = async (event) => {
+    setIsFetching(true);
     event.preventDefault();
 
     const data = new FormData();
@@ -86,7 +86,6 @@ const KepalaPerpustakaanProfil = ({ data }) => {
 
     try {
       setLoading(true);
-      updateFetchStatus(true);
 
       const response = await setUpdateStaff(staff_id, data);
 
@@ -367,7 +366,7 @@ const KepalaPerpustakaanProfil = ({ data }) => {
                       className="p-2 w-40 lg:w-40 2xl:w-48 text-black font-medium rounded-xl border border-black bg-transparent hover:bg-black/5"
                       onClick={() => {
                         setEnableEdit(false);
-                        updateFetchStatus(true);
+                        setIsFetching(false);
                       }}
                     >
                       Batal

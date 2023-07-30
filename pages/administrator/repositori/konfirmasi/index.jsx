@@ -20,6 +20,7 @@ import jwtDecode from 'jwt-decode';
 import CardFooter from '../../../../components/atoms/Card/CardFooter';
 import { FormatDateIntl } from '../../../../helper/format_date_intl';
 import SelectCategory from '../../../../components/mollecules/Select/Category';
+import { regex } from '../../../../helper/regex';
 
 const AdministratorKonfirmasiRepositori = ({ data }) => {
   const [isFetching, setIsFetching] = useState(true);
@@ -247,7 +248,7 @@ const AdministratorKonfirmasiRepositori = ({ data }) => {
                                 className="hidden md:block w-20 h-20"
                               />
                               <div>
-                                <h3 className="text-base font-medium text-justify mb-1 w-10/12 md:w-11/12">
+                                <h3 className="text-base font-medium text-justify mb-1">
                                   {item.title}
                                 </h3>
                                 {item.authors?.map((author) => (
@@ -349,7 +350,7 @@ const AdministratorKonfirmasiRepositori = ({ data }) => {
               className="flex-grow border border-black/50 rounded-xl py-2 px-4 outline-none focus:border-blue"
               placeholder="Tahun dibuat"
               value={yearFilter}
-              onChange={(event) => setYearFilter(event.target.value)}
+              onChange={(event) => setYearFilter(regex.numeric(event.target.value, 4))}
             />
           </div>
           <div className="flex flex-col gap-1 w-full">

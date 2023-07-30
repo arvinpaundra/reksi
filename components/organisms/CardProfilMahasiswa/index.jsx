@@ -17,13 +17,11 @@ import { FormatDateIntl } from '../../../helper/format_date_intl';
 import { regex } from '../../../helper/regex';
 import SelectDepartement from '../../mollecules/Select/Departement';
 import SelectProdi from '../../mollecules/Select/Prodi';
-import { useFetchUser } from '../../../contexts/FetchUserContext';
 
 const CardProfilMahasiswa = (props) => {
   const { data } = props;
 
-  const { isFetching, updateFetchStatus } = useFetchUser();
-
+  const [isFetching, setIsFetching] = useState(true);
   const [enableEdit, setEnableEdit] = useState(false);
   const [loading, setLoading] = useState(null);
   const [errors, setErrors] = useState({});
@@ -74,10 +72,11 @@ const CardProfilMahasiswa = (props) => {
       getDetailPemustakaAPI(pemustaka_id);
     }
 
-    updateFetchStatus(false);
-  }, [getDetailPemustakaAPI, pemustaka_id, isFetching, updateFetchStatus]);
+    setIsFetching(false);
+  }, [getDetailPemustakaAPI, pemustaka_id, isFetching]);
 
   const handleUpdateProfile = async (event) => {
+    setIsFetching(true);
     event.preventDefault();
 
     const data = new FormData();
@@ -100,7 +99,6 @@ const CardProfilMahasiswa = (props) => {
 
     try {
       setLoading(true);
-      updateFetchStatus(true);
 
       const response = await setUpdateProfilePemustaka(pemustaka_id, data);
 
@@ -483,7 +481,7 @@ const CardProfilMahasiswa = (props) => {
                 className="p-2 w-40 lg:w-40 2xl:w-48 text-black font-medium rounded-xl border border-black bg-transparent hover:bg-black/5"
                 onClick={() => {
                   setEnableEdit(false);
-                  updateFetchStatus(true);
+                  setIsFetching(true);
                 }}
               >
                 Batal

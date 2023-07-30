@@ -13,7 +13,7 @@ const contextToastClass = {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <FetchUserProvider>
+    <>
       <ToastContainer
         toastClassName={({ type }) =>
           contextToastClass[type || 'default'] +
@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }) {
         position="top-right"
       />
       <Component {...pageProps} />
-    </FetchUserProvider>
+    </>
   );
 }
 

@@ -21,6 +21,7 @@ import SelectDepartement from '../../../../components/mollecules/Select/Departem
 import SelectCollection from '../../../../components/mollecules/Select/Collection';
 import { FormatDateIntl } from '../../../../helper/format_date_intl';
 import SelectCategory from '../../../../components/mollecules/Select/Category';
+import { regex } from '../../../../helper/regex';
 
 const RepositoriDimbing = (props) => {
   const { data } = props;
@@ -363,7 +364,7 @@ const RepositoriDimbing = (props) => {
               className="flex-grow border border-black/50 rounded-xl py-2 px-4 outline-none focus:border-blue"
               placeholder="Tahun dibuat"
               value={yearFilter}
-              onChange={(event) => setYearFilter(event.target.value)}
+              onChange={(event) => setYearFilter(regex.numeric(event.target.value, 4))}
             />
           </div>
           <div className="flex flex-col gap-1 w-full">

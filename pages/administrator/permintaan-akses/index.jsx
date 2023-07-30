@@ -185,20 +185,20 @@ const AdminsitratorRequestAccess = ({ data }) => {
 
               <Card className="w-full bg-white rounded-lg overflow-hidden">
                 <CardBody>
-                  <table className="w-full text-black/90 py-2">
+                  <table className="w-full text-black/90 py-2 table-auto">
                     <thead className="font-semibold text-center">
                       <tr className="border-b border-gray/30">
-                        <td className="py-4">Nama Lengkap</td>
-                        <td className="py-4">Jurusan</td>
-                        <td className="py-4">Role Pilihan</td>
-                        <td className="py-4">Aksi</td>
+                        <td className="p-4">Nama Lengkap</td>
+                        <td className="p-4">Jurusan</td>
+                        <td className="p-4">Role Pilihan</td>
+                        <td className="p-4">Aksi</td>
                       </tr>
                     </thead>
                     <tbody className="text-center">
                       {loading ? (
                         <tr>
                           <td
-                            colSpan={7}
+                            colSpan={4}
                             className="pt-8 pb-2 animate-pulse text-black/90 tracking-wide"
                           >
                             Loading . . .
@@ -207,10 +207,10 @@ const AdminsitratorRequestAccess = ({ data }) => {
                       ) : (
                         requestAccesses?.map((item) => (
                           <tr className="even:bg-blue/5 hover:bg-blue/5" key={item.id}>
-                            <td className="py-6">{item.pemustaka}</td>
-                            <td className="py-6">{item.departement}</td>
-                            <td className="py-6">{item.role}</td>
-                            <td className="py-6">
+                            <td className="py-6 px-4">{item.pemustaka}</td>
+                            <td className="py-6 px-4">{item.departement}</td>
+                            <td className="py-6 px-4">{item.role}</td>
+                            <td className="py-6 px-4">
                               <button
                                 onClick={() => {
                                   setOpenModal((prevState) => !prevState);

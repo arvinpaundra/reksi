@@ -38,9 +38,10 @@ export const callAPI = async ({ url, method, data, token, serverToken }) => {
       data: null,
     };
 
-    Cookies.remove('token');
-
-    window.location.href = '/auth/masuk';
+    setTimeout(() => {
+      Cookies.remove('token');
+      window.location.href = '/auth/masuk';
+    }, 3000);
 
     return res;
   }
