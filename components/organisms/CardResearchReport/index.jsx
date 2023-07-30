@@ -192,13 +192,13 @@ const CardResearchReport = (props) => {
                 <p className="text-sm">Tambah author</p>
               </button>
 
-              {authors.length > 0 && (
+              {authors.length > 1 && (
                 <div className="flex flex-col gap-3 w-full">
                   {authors.map((_, i) => (
-                    <div key={i} className="flex items-center gap-2 w-full">
+                    <div key={i + 1} className="flex items-center gap-2 w-full">
                       <SelectPemustaka index={i + 1} onPemustakaChange={handlePemustakaChange} />
 
-                      {i > 0 && (
+                      {i > 1 && (
                         <button
                           className="p-4 text-red hover:bg-red/10 rounded-full"
                           onClick={() => removeSelectPemustaka(i + 1)}
